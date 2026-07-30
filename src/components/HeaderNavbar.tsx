@@ -102,6 +102,28 @@ export const HeaderNavbar: React.FC<HeaderNavbarProps> = ({
           <span className="hidden sm:inline">Dimensions</span>
         </button>
 
+        {/* Clear Canvas */}
+        <button
+          onClick={() => {
+            if (confirm('Are you sure you want to clear the entire canvas? This will remove all establishments, roads, and landmarks.')) {
+              onClearCanvas();
+            }
+          }}
+          className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium transition-colors"
+          style={{
+            color: '#b94040',
+            backgroundColor: 'transparent',
+            border: '1px solid #c8c0b0',
+            borderRadius: '4px',
+          }}
+          onMouseEnter={e => (e.currentTarget.style.backgroundColor = '#fdf0f0')}
+          onMouseLeave={e => (e.currentTarget.style.backgroundColor = 'transparent')}
+          title="Clear the entire canvas"
+        >
+          <RotateCcw className="w-3.5 h-3.5" />
+          <span className="hidden sm:inline">Clear Canvas</span>
+        </button>
+
         {/* Templates dropdown */}
         <div className="relative">
           <button
