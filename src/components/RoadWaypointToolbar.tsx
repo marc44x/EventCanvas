@@ -13,6 +13,10 @@ interface RoadWaypointToolbarProps {
   onSelectWaypointType: (type: WaypointType) => void;
   clearAllRoads: () => void;
   clearAllWaypoints: () => void;
+  landmarkName: string;
+  onSetLandmarkName: (name: string) => void;
+  landmarkColor: string;
+  onSetLandmarkColor: (color: string) => void;
 }
 
 const toolBtn = (active: boolean) => ({
@@ -67,7 +71,7 @@ export const RoadWaypointToolbar: React.FC<RoadWaypointToolbarProps> = ({
         </button>
         <button style={toolBtn(activeTool === 'add_zone')} onClick={() => onSelectTool('add_zone')}>
           <Layers style={{ width: 12, height: 12 }} />
-          <span>Zone</span>
+          <span>Landmark Area</span>
         </button>
       </div>
 
@@ -141,16 +145,53 @@ export const RoadWaypointToolbar: React.FC<RoadWaypointToolbarProps> = ({
         </select>
       )}
 
+      {/* Landmark Area sub-options */}
+      {activeTool === 'add_zone' && (
+        <div className="flex items-center gap-2">
+          <input
+            type="text"
+            value={landmarkName}
+            onChange={(e) => onSetLandmarkName(e.target.value)}
+            placeholder="e.g. Main Stage"
+            style={{
+              fontSize: 11,
+              padding: '3px 6px',
+              border: '1px solid #c8c0b0',
+              borderRadius: 3,
+              backgroundColor: '#faf8f4',
+              color: '#2c2825',
+              fontFamily: 'monospace',
+              width: 140,
+            }}
+          />
+          <input
+            type="color"
+            value={landmarkColor}
+            onChange={(e) => onSetLandmarkColor(e.target.value)}
+            style={{ width: 22, height: 22, border: '1px solid #c8c0b0', borderRadius: 3, cursor: 'pointer', padding: 0 }}
+            title="Landmark Color"
+          />
+        </div>
+      )}
+
       {/* Hint text */}
       {activeTool === 'select' && (
-        <span style={{ fontSize: 10, color: '#9c9388', fontStyle: 'italic' }}>
-          click to select · drag to move · shift+drag to pan
+        <span style={{ fontSize: 10, color: '#9c9388', fontStyle: 'italic', marginLeft: 'auto' }}>
+          click road to edit · press delete to remove
         </span>
       )}
       {activeTool === 'draw_road' && (
-        <span style={{ fontSize: 10, color: '#9c9388', fontStyle: 'italic' }}>
-          click to add points · double-click or press finish to complete
-        </span>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginLeft: 'auto' }}>
+          <span style={{ fontSize: 10, color: '#9c9388', fontStyle: 'italic' }}>
+            click 2 points to draw 90° road
+          </span>
+          <button
+            onClick={() => { if(confirm('Clear all roads?')) clearAllRoads(); }}
+            style={{ fontSize: 10, padding: '3px 8px', border: '1px solid #b94040', borderRadius: 3, backgroundColor: 'transparent', color: '#b94040', cursor: 'pointer' }}
+          >
+            Clear All
+          </button>
+        </div>
       )}
     </div>
   );

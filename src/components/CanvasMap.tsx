@@ -53,6 +53,8 @@ interface CanvasMapProps {
   onDeleteWaypoint: (id: string) => void;
   onAddZoneOverlay: (zone: ZoneOverlay) => void;
   onDeleteZoneOverlay: (id: string) => void;
+  landmarkName: string;
+  landmarkColor: string;
   svgRef: React.RefObject<SVGSVGElement | null>;
 }
 
@@ -74,6 +76,8 @@ export const CanvasMap: React.FC<CanvasMapProps> = ({
   onDeleteWaypoint,
   onAddZoneOverlay,
   onDeleteZoneOverlay,
+  landmarkName,
+  landmarkColor,
   svgRef,
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -107,6 +111,9 @@ export const CanvasMap: React.FC<CanvasMapProps> = ({
   // Zone creation state
   const [zoneStartPoint, setZoneStartPoint] = useState<{ x: number; y: number } | null>(null);
   const [currentZoneBox, setCurrentZoneBox] = useState<{ x: number; y: number; w: number; h: number } | null>(null);
+
+  // Mouse position for preview
+  const [currentMousePos, setCurrentMousePos] = useState<{ x: number; y: number } | null>(null);
 
   // Meter-to-Pixel scaling factor (1 meter = 16px at zoom 1)
   const METERS_TO_PX = 16;
@@ -142,6 +149,25 @@ export const CanvasMap: React.FC<CanvasMapProps> = ({
     [pan, zoom, landW, landH, project.landDimensions.gridSnap]
   );
 
+  // Keyboard shortcut to delete selected road
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (
+        document.activeElement?.tagName === 'INPUT' ||
+        document.activeElement?.tagName === 'TEXTAREA' ||
+        document.activeElement?.tagName === 'SELECT'
+      ) {
+        return;
+      }
+      if ((e.key === 'Delete' || e.key === 'Backspace') && selectedRoadId) {
+        onDeleteRoad(selectedRoadId);
+        setSelectedRoadId(null);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [selectedRoadId, onDeleteRoad]);
+
   // Reset zoom & pan to fit land
   const handleResetView = () => {
     setZoom(1);
@@ -160,7 +186,32 @@ export const CanvasMap: React.FC<CanvasMapProps> = ({
     const coords = getLandCoordinates(e);
 
     if (activeTool === 'draw_road') {
-      setActiveRoadPoints((prev) => [...prev, coords]);
+      if (activeRoadPoints.length === 0) {
+        setActiveRoadPoints([coords]);
+      } else if (activeRoadPoints.length === 1) {
+        // Calculate orthogonal path on second click
+        const p1 = activeRoadPoints[0];
+        const p2 = coords;
+        const pMid = Math.abs(p2.x - p1.x) > Math.abs(p2.y - p1.y) 
+            ? { x: p2.x, y: p1.y } 
+            : { x: p1.x, y: p2.y };
+        
+        const newRoad: RoadPath = {
+          id: `road-${Date.now()}`,
+          name: `${selectedRoadType.replace('_', ' ').toUpperCase()} Path`,
+          roadType: selectedRoadType,
+          width: roadWidth,
+          color:
+            selectedRoadType === 'main_avenue'
+              ? '#475569'
+              : selectedRoadType === 'emergency_corridor'
+              ? '#ef4444'
+              : '#94a3b8',
+          points: [p1, pMid, p2],
+        };
+        onAddRoad(newRoad);
+        setActiveRoadPoints([]); // Reset for next road
+      }
     } else if (activeTool === 'place_waypoint') {
       const newWp: Waypoint = {
         id: `wp-${Date.now()}`,
@@ -189,8 +240,8 @@ export const CanvasMap: React.FC<CanvasMapProps> = ({
 
         const newZone: ZoneOverlay = {
           id: `zone-${Date.now()}`,
-          name: `Zone ${project.zoneOverlays ? project.zoneOverlays.length + 1 : 1}`,
-          color: '#3b82f6',
+          name: landmarkName || `Landmark Area`,
+          color: landmarkColor || '#4a6fa5',
           x,
           y,
           width: w,
@@ -217,6 +268,7 @@ export const CanvasMap: React.FC<CanvasMapProps> = ({
     }
 
     const coords = getLandCoordinates(e);
+    setCurrentMousePos(coords);
 
     if (activeTool === 'add_zone' && zoneStartPoint) {
       const x = Math.min(zoneStartPoint.x, coords.x);
@@ -269,24 +321,8 @@ export const CanvasMap: React.FC<CanvasMapProps> = ({
     setDraggingPointInfo(null);
   };
 
-  // Finish road path on double click or enter
-  const handleFinishRoad = () => {
-    if (activeRoadPoints.length >= 2) {
-      const newRoad: RoadPath = {
-        id: `road-${Date.now()}`,
-        name: `${selectedRoadType.replace('_', ' ').toUpperCase()} Path`,
-        roadType: selectedRoadType,
-        width: roadWidth,
-        color:
-          selectedRoadType === 'main_avenue'
-            ? '#475569'
-            : selectedRoadType === 'emergency_corridor'
-            ? '#ef4444'
-            : '#94a3b8',
-        points: [...activeRoadPoints],
-      };
-      onAddRoad(newRoad);
-    }
+  // Cancel road path
+  const handleCancelRoad = () => {
     setActiveRoadPoints([]);
   };
 
@@ -568,7 +604,7 @@ export const CanvasMap: React.FC<CanvasMapProps> = ({
       })()}
 
       {/* Road drawing hint */}
-      {activeTool === 'draw_road' && activeRoadPoints.length > 0 && (
+      {activeTool === 'draw_road' && (
         <div
           className="absolute bottom-6 left-1/2 -translate-x-1/2 z-20 flex items-center gap-3 text-xs"
           style={{
@@ -580,13 +616,15 @@ export const CanvasMap: React.FC<CanvasMapProps> = ({
             color: '#2c2825',
           }}
         >
-          <span>Adding road — {activeRoadPoints.length} point{activeRoadPoints.length > 1 ? 's' : ''}</span>
-          <button
-            onClick={handleFinishRoad}
-            style={{ fontSize: 11, fontWeight: 600, padding: '3px 10px', border: '1px solid #4a6fa5', borderRadius: 3, backgroundColor: '#d9e5f5', color: '#4a6fa5', cursor: 'pointer' }}
-          >
-            Finish
-          </button>
+          <span>{activeRoadPoints.length === 0 ? 'Click to set start point' : 'Click to set end point (auto 90° smooth corner)'}</span>
+          {activeRoadPoints.length > 0 && (
+            <button
+              onClick={handleCancelRoad}
+              style={{ fontSize: 11, fontWeight: 600, padding: '3px 10px', border: '1px solid #b94040', borderRadius: 3, backgroundColor: 'transparent', color: '#b94040', cursor: 'pointer' }}
+            >
+              Cancel
+            </button>
+          )}
         </div>
       )}
 
@@ -625,7 +663,7 @@ export const CanvasMap: React.FC<CanvasMapProps> = ({
             x={0} y={0}
             width={landPixelW}
             height={landPixelH}
-            fill={project.blueprintMode ? '#0d1e38' : '#fffef9'}
+            fill={project.blueprintMode ? '#0d1e38' : '#eef7f0'}
             stroke={project.blueprintMode ? '#5a8fc0' : '#8a7d6a'}
             strokeWidth="2"
             rx={project.landDimensions.shape === 'oval' ? landPixelW / 2 : 2}
@@ -653,42 +691,58 @@ export const CanvasMap: React.FC<CanvasMapProps> = ({
             </g>
           )}
 
-          {/* Zone Overlays */}
+          {/* Landmark Overlays */}
           {project.zoneOverlays?.map((zone) => (
-            <g key={zone.id}>
+            <g
+              key={zone.id}
+              style={{ cursor: activeTool === 'select' ? 'pointer' : 'default' }}
+              onClick={(e) => {
+                if (activeTool === 'select') {
+                  e.stopPropagation();
+                  if (confirm(`Delete landmark "${zone.name}"?`)) {
+                    onDeleteZoneOverlay(zone.id);
+                  }
+                }
+              }}
+            >
               <rect
                 x={zone.x * METERS_TO_PX}
                 y={zone.y * METERS_TO_PX}
                 width={zone.width * METERS_TO_PX}
                 height={zone.height * METERS_TO_PX}
                 fill={zone.color}
-                fillOpacity={0.15}
+                fillOpacity={0.08}
                 stroke={zone.color}
                 strokeWidth="2"
-                strokeDasharray="6 4"
-                rx="8"
+                strokeDasharray="4 4"
               />
               <text
-                x={zone.x * METERS_TO_PX + 8}
-                y={zone.y * METERS_TO_PX + 20}
+                x={zone.x * METERS_TO_PX + 4}
+                y={zone.y * METERS_TO_PX + 14}
                 fill={zone.color}
-                className="font-bold text-xs font-mono uppercase tracking-wider"
+                style={{ fontSize: 10, fontFamily: 'monospace', fontWeight: 600, pointerEvents: 'none' }}
               >
                 {zone.name}
               </text>
+              {activeTool === 'select' && (
+                <g transform={`translate(${zone.x * METERS_TO_PX + zone.width * METERS_TO_PX - 16}, ${zone.y * METERS_TO_PX + 4})`}>
+                  <rect width={12} height={12} rx={2} fill="#faf8f4" stroke={zone.color} strokeWidth={1} />
+                  <text x={6} y={9} fontSize={10} fill={zone.color} textAnchor="middle" style={{ pointerEvents: 'none', fontWeight: 'bold' }}>✕</text>
+                </g>
+              )}
             </g>
           ))}
 
-          {/* Active Zone Creation Drawing Box */}
+          {/* Active Landmark Creation Drawing Box */}
           {currentZoneBox && (
             <rect
               x={currentZoneBox.x * METERS_TO_PX}
               y={currentZoneBox.y * METERS_TO_PX}
               width={currentZoneBox.w * METERS_TO_PX}
               height={currentZoneBox.h * METERS_TO_PX}
-              fill="#3b82f6"
-              fillOpacity={0.2}
-              stroke="#3b82f6"
+              fill={landmarkColor}
+              fillOpacity={0.1}
+              stroke={landmarkColor}
               strokeWidth="2"
               strokeDasharray="4 4"
             />
@@ -774,14 +828,24 @@ export const CanvasMap: React.FC<CanvasMapProps> = ({
           })}
 
           {/* Active road drawing preview */}
-          {activeRoadPoints.length > 0 && (
-            <path
-              d={activeRoadPoints.map((p, i) => `${i === 0 ? 'M' : 'L'} ${p.x * METERS_TO_PX} ${p.y * METERS_TO_PX}`).join(' ')}
-              fill="none" stroke="#4a6fa5"
-              strokeWidth={roadWidth * METERS_TO_PX}
-              strokeDasharray="5 4" opacity={0.35}
-            />
-          )}
+          {activeRoadPoints.length === 1 && currentMousePos && (() => {
+             const p1 = activeRoadPoints[0];
+             const p2 = currentMousePos;
+             const pMid = Math.abs(p2.x - p1.x) > Math.abs(p2.y - p1.y) 
+                 ? { x: p2.x, y: p1.y } 
+                 : { x: p1.x, y: p2.y };
+             const pts = [p1, pMid, p2];
+             const d = pts.map((p, i) => `${i === 0 ? 'M' : 'L'} ${p.x * METERS_TO_PX} ${p.y * METERS_TO_PX}`).join(' ');
+             return (
+              <path
+                d={d}
+                fill="none" stroke="#4a6fa5"
+                strokeWidth={roadWidth * METERS_TO_PX}
+                strokeDasharray="5 4" opacity={0.35}
+                strokeLinecap="round" strokeLinejoin="round"
+              />
+             );
+          })()}
 
           {/* Waypoints — simple pin marks */}
           {project.waypoints.map((wp) => {

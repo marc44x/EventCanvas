@@ -57,14 +57,11 @@ export const HeaderNavbar: React.FC<HeaderNavbarProps> = ({
             <Layers className="w-4 h-4" />
           </div>
           <div>
-            <p
-              className="text-sm font-semibold leading-none"
-              style={{ color: '#2c2825', fontFamily: 'Inter, sans-serif' }}
-            >
-              Event Retail Coordinator
-            </p>
-            <p className="text-[10px] mt-0.5" style={{ color: '#9c9388', fontFamily: 'monospace' }}>
-              layout planner
+            <h1 className="text-sm font-extrabold tracking-tight text-slate-900 leading-none">
+              EventCanvas
+            </h1>
+            <p className="text-[10px] text-slate-500 font-mono mt-0.5">
+              Event Layout & Retail Planner
             </p>
           </div>
         </div>

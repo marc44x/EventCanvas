@@ -77,8 +77,11 @@ export default function App() {
   const [roadWidth, setRoadWidth] = useState<number>(6);
   const [selectedWaypointType, setSelectedWaypointType] = useState<WaypointType>('main_entrance');
 
-  // Selected establishment instance ID
   const [selectedEstablishmentId, setSelectedEstablishmentId] = useState<string | null>(null);
+
+  // Landmark Options
+  const [landmarkName, setLandmarkName] = useState<string>('Landmark Area');
+  const [landmarkColor, setLandmarkColor] = useState<string>('#4a6fa5');
 
   // Modals
   const [isLandModalOpen, setIsLandModalOpen] = useState(false);
@@ -334,6 +337,10 @@ export default function App() {
           onSelectWaypointType={setSelectedWaypointType}
           clearAllRoads={() => setProject((prev) => ({ ...prev, roads: [] }))}
           clearAllWaypoints={() => setProject((prev) => ({ ...prev, waypoints: [] }))}
+          landmarkName={landmarkName}
+          onSetLandmarkName={setLandmarkName}
+          landmarkColor={landmarkColor}
+          onSetLandmarkColor={setLandmarkColor}
         />
       </div>
 
@@ -371,6 +378,8 @@ export default function App() {
             onDeleteWaypoint={handleDeleteWaypoint}
             onAddZoneOverlay={handleAddZoneOverlay}
             onDeleteZoneOverlay={handleDeleteZoneOverlay}
+            landmarkName={landmarkName}
+            landmarkColor={landmarkColor}
             svgRef={svgRef}
           />
         </div>
