@@ -1,18 +1,6 @@
 import React from 'react';
 import { ActiveTool, RoadType, WaypointType } from '../types';
-import {
-  MousePointer,
-  Footprints,
-  Navigation,
-  MapPin,
-  Ruler,
-  Plus,
-  ShieldAlert,
-  LogIn,
-  Info,
-  Layers,
-  Radio,
-} from 'lucide-react';
+import { MousePointer, Footprints, Navigation, Layers } from 'lucide-react';
 
 interface RoadWaypointToolbarProps {
   activeTool: ActiveTool;
@@ -27,6 +15,21 @@ interface RoadWaypointToolbarProps {
   clearAllWaypoints: () => void;
 }
 
+const toolBtn = (active: boolean) => ({
+  display: 'flex',
+  alignItems: 'center',
+  gap: '5px',
+  padding: '5px 10px',
+  fontSize: '11px',
+  fontWeight: active ? '600' : '400',
+  borderRadius: '3px',
+  border: active ? '1.5px solid #4a6fa5' : '1px solid transparent',
+  backgroundColor: active ? '#d9e5f5' : 'transparent',
+  color: active ? '#2c2825' : '#5c5248',
+  cursor: 'pointer',
+  transition: 'all 0.1s',
+} as React.CSSProperties);
+
 export const RoadWaypointToolbar: React.FC<RoadWaypointToolbarProps> = ({
   activeTool,
   onSelectTool,
@@ -36,119 +39,117 @@ export const RoadWaypointToolbar: React.FC<RoadWaypointToolbarProps> = ({
   onChangeRoadWidth,
   selectedWaypointType,
   onSelectWaypointType,
-  clearAllRoads,
-  clearAllWaypoints,
 }) => {
   return (
-    <div className="bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border border-slate-200 dark:border-slate-800 rounded-2xl shadow-xl p-2 flex flex-wrap items-center gap-2 text-xs text-slate-800 dark:text-slate-200">
-      {/* Primary Tool Mode Toggles */}
-      <div className="flex items-center bg-slate-100 dark:bg-slate-800 p-1 rounded-xl gap-1">
-        <button
-          onClick={() => onSelectTool('select')}
-          className={`px-3 py-1.5 rounded-lg font-medium transition flex items-center gap-1.5 ${
-            activeTool === 'select'
-              ? 'bg-blue-600 text-white shadow-sm'
-              : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
-          }`}
-          title="Select, Drag, Rotate, and Edit Establishments"
-        >
-          <MousePointer className="w-3.5 h-3.5" />
-          <span>Select & Move</span>
+    <div
+      className="flex flex-wrap items-center gap-2"
+      style={{
+        backgroundColor: '#faf8f4',
+        border: '1.5px solid #c8c0b0',
+        borderRadius: '4px',
+        padding: '6px 10px',
+        boxShadow: '1px 2px 6px rgba(44,40,37,0.08)',
+      }}
+    >
+      {/* Tool buttons */}
+      <div className="flex items-center gap-0.5" style={{ backgroundColor: '#f0ede6', borderRadius: '3px', padding: '2px' }}>
+        <button style={toolBtn(activeTool === 'select')} onClick={() => onSelectTool('select')}>
+          <MousePointer style={{ width: 12, height: 12 }} />
+          <span>Select</span>
         </button>
-
-        <button
-          onClick={() => onSelectTool('draw_road')}
-          className={`px-3 py-1.5 rounded-lg font-medium transition flex items-center gap-1.5 ${
-            activeTool === 'draw_road'
-              ? 'bg-blue-600 text-white shadow-sm'
-              : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
-          }`}
-          title="Draw Roads and Pedestrian Walkways"
-        >
-          <Footprints className="w-3.5 h-3.5" />
-          <span>Draw Road</span>
+        <button style={toolBtn(activeTool === 'draw_road')} onClick={() => onSelectTool('draw_road')}>
+          <Footprints style={{ width: 12, height: 12 }} />
+          <span>Road</span>
         </button>
-
-        <button
-          onClick={() => onSelectTool('place_waypoint')}
-          className={`px-3 py-1.5 rounded-lg font-medium transition flex items-center gap-1.5 ${
-            activeTool === 'place_waypoint'
-              ? 'bg-blue-600 text-white shadow-sm'
-              : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
-          }`}
-          title="Place Waypoints, Entrances, and Exits"
-        >
-          <Navigation className="w-3.5 h-3.5" />
-          <span>Place Waypoint</span>
+        <button style={toolBtn(activeTool === 'place_waypoint')} onClick={() => onSelectTool('place_waypoint')}>
+          <Navigation style={{ width: 12, height: 12 }} />
+          <span>Waypoint</span>
         </button>
-
-        <button
-          onClick={() => onSelectTool('add_zone')}
-          className={`px-3 py-1.5 rounded-lg font-medium transition flex items-center gap-1.5 ${
-            activeTool === 'add_zone'
-              ? 'bg-blue-600 text-white shadow-sm'
-              : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
-          }`}
-          title="Draw Zoned Areas (Food Zone, Retail Zone)"
-        >
-          <Layers className="w-3.5 h-3.5" />
-          <span>Zone Overlay</span>
+        <button style={toolBtn(activeTool === 'add_zone')} onClick={() => onSelectTool('add_zone')}>
+          <Layers style={{ width: 12, height: 12 }} />
+          <span>Zone</span>
         </button>
       </div>
 
-      <div className="h-5 w-px bg-slate-200 dark:bg-slate-800" />
+      {/* Divider */}
+      <div style={{ width: 1, height: 20, backgroundColor: '#c8c0b0' }} />
 
-      {/* Sub-controls based on active tool */}
+      {/* Road sub-options */}
       {activeTool === 'draw_road' && (
-        <div className="flex items-center gap-2 animate-in fade-in duration-150">
-          <span className="font-semibold text-slate-500 text-[11px]">Road Type:</span>
+        <div className="flex items-center gap-2">
           <select
             value={selectedRoadType}
             onChange={(e) => onSelectRoadType(e.target.value as RoadType)}
-            className="px-2 py-1 bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-xs font-medium"
+            style={{
+              fontSize: 11,
+              padding: '3px 6px',
+              border: '1px solid #c8c0b0',
+              borderRadius: 3,
+              backgroundColor: '#faf8f4',
+              color: '#2c2825',
+              fontFamily: 'monospace',
+            }}
           >
-            <option value="main_avenue">Main Promenade Avenue</option>
-            <option value="pedestrian_path">Pedestrian Walkway</option>
-            <option value="service_road">Service & Logistics Road</option>
-            <option value="emergency_corridor">Emergency Access Corridor</option>
+            <option value="main_avenue">Main Avenue</option>
+            <option value="pedestrian_path">Pedestrian Path</option>
+            <option value="service_road">Service Road</option>
+            <option value="emergency_corridor">Emergency Corridor</option>
           </select>
-
-          <span className="font-semibold text-slate-500 text-[11px]">Width:</span>
           <select
             value={roadWidth}
             onChange={(e) => onChangeRoadWidth(Number(e.target.value))}
-            className="px-2 py-1 bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-xs font-medium font-mono"
+            style={{
+              fontSize: 11,
+              padding: '3px 6px',
+              border: '1px solid #c8c0b0',
+              borderRadius: 3,
+              backgroundColor: '#faf8f4',
+              color: '#2c2825',
+              fontFamily: 'monospace',
+            }}
           >
-            <option value={3}>3 meters</option>
-            <option value={4}>4 meters</option>
-            <option value={6}>6 meters (Standard)</option>
-            <option value={8}>8 meters (Wide Promenade)</option>
-            <option value={10}>10 meters (Avenue)</option>
+            <option value={3}>3m</option>
+            <option value={4}>4m</option>
+            <option value={6}>6m</option>
+            <option value={8}>8m</option>
+            <option value={10}>10m</option>
           </select>
         </div>
       )}
 
+      {/* Waypoint sub-options */}
       {activeTool === 'place_waypoint' && (
-        <div className="flex items-center gap-2 animate-in fade-in duration-150">
-          <span className="font-semibold text-slate-500 text-[11px]">Waypoint:</span>
-          <select
-            value={selectedWaypointType}
-            onChange={(e) => onSelectWaypointType(e.target.value as WaypointType)}
-            className="px-2 py-1 bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-xs font-medium"
-          >
-            <option value="main_entrance">Main Gate Entrance</option>
-            <option value="emergency_exit">Emergency Exit Gate</option>
-            <option value="info_sign">Information & Map Signpost</option>
-            <option value="service_gate">VIP & Logistics Gate</option>
-            <option value="crowd_node">Crowd Flow Direction Node</option>
-            <option value="stage_view">Main Stage Viewing Point</option>
-          </select>
-        </div>
+        <select
+          value={selectedWaypointType}
+          onChange={(e) => onSelectWaypointType(e.target.value as WaypointType)}
+          style={{
+            fontSize: 11,
+            padding: '3px 6px',
+            border: '1px solid #c8c0b0',
+            borderRadius: 3,
+            backgroundColor: '#faf8f4',
+            color: '#2c2825',
+            fontFamily: 'monospace',
+          }}
+        >
+          <option value="main_entrance">Main Entrance</option>
+          <option value="emergency_exit">Emergency Exit</option>
+          <option value="info_sign">Info Sign</option>
+          <option value="service_gate">Service Gate</option>
+          <option value="crowd_node">Crowd Node</option>
+          <option value="stage_view">Stage View</option>
+        </select>
       )}
 
+      {/* Hint text */}
       {activeTool === 'select' && (
-        <span className="text-[11px] text-slate-400 italic">
-          Click any stall to move, resize, rotate, or edit properties.
+        <span style={{ fontSize: 10, color: '#9c9388', fontStyle: 'italic' }}>
+          click to select · drag to move · shift+drag to pan
+        </span>
+      )}
+      {activeTool === 'draw_road' && (
+        <span style={{ fontSize: 10, color: '#9c9388', fontStyle: 'italic' }}>
+          click to add points · double-click or press finish to complete
         </span>
       )}
     </div>

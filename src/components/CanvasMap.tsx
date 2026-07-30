@@ -342,271 +342,250 @@ export const CanvasMap: React.FC<CanvasMapProps> = ({
   return (
     <div
       ref={containerRef}
-      className={`relative flex-1 h-full overflow-hidden select-none transition-colors duration-300 ${
-        project.blueprintMode
-          ? 'bg-slate-950 text-slate-100'
-          : 'bg-slate-100 dark:bg-slate-950 text-slate-900'
-      }`}
+      className={`relative flex-1 h-full overflow-hidden select-none`}
+      style={{ backgroundColor: project.blueprintMode ? '#0f1a2e' : '#f5f2eb' }}
     >
-      {/* Top Floating Control Bar & Selected Inspector */}
+      {/* Selected Establishment Quick Inspector Bar — sketch style */}
       <div className="absolute top-4 left-4 right-4 z-20 flex flex-wrap items-center justify-between gap-3 pointer-events-none">
-        {/* Selected Establishment Quick Inspector Bar */}
         {selectedInst ? (
-          <div className="pointer-events-auto bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-2xl shadow-2xl p-2.5 flex items-center gap-3 text-xs animate-in slide-in-from-top-3">
+          <div
+            className="pointer-events-auto flex items-center gap-3 text-xs animate-in"
+            style={{
+              backgroundColor: '#faf8f4',
+              border: '1.5px solid #c8c0b0',
+              borderRadius: '4px',
+              padding: '6px 10px',
+              boxShadow: '1px 2px 8px rgba(44,40,37,0.10)',
+            }}
+          >
             <div
-              className="w-4 h-4 rounded-full shrink-0 shadow-sm"
-              style={{ backgroundColor: selectedInst.color }}
+              className="w-3 h-3 rounded-sm shrink-0"
+              style={{ backgroundColor: selectedInst.color, border: '1px solid #c8c0b0' }}
             />
             <div className="flex flex-col">
               <input
                 type="text"
                 value={selectedInst.name}
                 onChange={(e) => onUpdateEstablishment({ ...selectedInst, name: e.target.value })}
-                className="font-bold text-slate-900 dark:text-white bg-transparent hover:bg-slate-100 dark:hover:bg-slate-800 px-1 rounded focus:outline-none"
+                style={{
+                  fontWeight: 600,
+                  fontSize: 12,
+                  color: '#2c2825',
+                  background: 'transparent',
+                  border: 'none',
+                  borderBottom: '1px dashed #c8c0b0',
+                  outline: 'none',
+                  padding: '0 2px',
+                  minWidth: 100,
+                }}
               />
-              <span className="text-[10px] text-slate-500 font-mono">
-                Stall #{selectedInst.stallNumber}
-              </span>
+              <span style={{ fontSize: 10, color: '#9c9388', fontFamily: 'monospace' }}>#{selectedInst.stallNumber}</span>
             </div>
 
-            <div className="h-6 w-px bg-slate-200 dark:bg-slate-800" />
+            <div style={{ width: 1, height: 20, backgroundColor: '#c8c0b0' }} />
 
             {/* Size Controls */}
             <div className="flex items-center gap-1.5 font-mono">
-              <span className="text-slate-400 text-[10px]">W:</span>
+              <span style={{ color: '#9c9388', fontSize: 10 }}>W:</span>
               <input
-                type="number"
-                min="1"
+                type="number" min="1"
                 value={selectedInst.width}
-                onChange={(e) =>
-                  onUpdateEstablishment({ ...selectedInst, width: Math.max(1, Number(e.target.value)) })
-                }
-                className="w-12 px-1 py-0.5 bg-slate-100 dark:bg-slate-800 border rounded font-mono text-xs"
+                onChange={(e) => onUpdateEstablishment({ ...selectedInst, width: Math.max(1, Number(e.target.value)) })}
+                style={{ width: 44, fontSize: 11, padding: '2px 4px', border: '1px solid #c8c0b0', borderRadius: 3, fontFamily: 'monospace', backgroundColor: '#f0ede6', color: '#2c2825' }}
               />
-              <span className="text-slate-400 text-[10px]">D:</span>
+              <span style={{ color: '#9c9388', fontSize: 10 }}>D:</span>
               <input
-                type="number"
-                min="1"
+                type="number" min="1"
                 value={selectedInst.depth}
-                onChange={(e) =>
-                  onUpdateEstablishment({ ...selectedInst, depth: Math.max(1, Number(e.target.value)) })
-                }
-                className="w-12 px-1 py-0.5 bg-slate-100 dark:bg-slate-800 border rounded font-mono text-xs"
+                onChange={(e) => onUpdateEstablishment({ ...selectedInst, depth: Math.max(1, Number(e.target.value)) })}
+                style={{ width: 44, fontSize: 11, padding: '2px 4px', border: '1px solid #c8c0b0', borderRadius: 3, fontFamily: 'monospace', backgroundColor: '#f0ede6', color: '#2c2825' }}
               />
-              <span className="text-slate-400 text-[10px]">m</span>
+              <span style={{ color: '#9c9388', fontSize: 10 }}>m</span>
             </div>
 
-            <div className="h-6 w-px bg-slate-200 dark:bg-slate-800" />
+            <div style={{ width: 1, height: 20, backgroundColor: '#c8c0b0' }} />
 
-            {/* Rotation button */}
+            {/* Rotation */}
             <button
-              onClick={() =>
-                onUpdateEstablishment({
-                  ...selectedInst,
-                  rotation: (selectedInst.rotation + 90) % 360,
-                })
-              }
-              className="px-2 py-1 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-lg flex items-center gap-1 font-mono text-xs"
-              title="Rotate 90 degrees"
+              onClick={() => onUpdateEstablishment({ ...selectedInst, rotation: (selectedInst.rotation + 90) % 360 })}
+              style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: 11, padding: '3px 8px', border: '1px solid #c8c0b0', borderRadius: 3, backgroundColor: '#f0ede6', cursor: 'pointer', fontFamily: 'monospace', color: '#2c2825' }}
+              title="Rotate 90°"
             >
-              <RotateCw className="w-3.5 h-3.5 text-blue-500" />
-              <span>{selectedInst.rotation}°</span>
+              <RotateCw style={{ width: 12, height: 12, color: '#4a6fa5' }} />
+              {selectedInst.rotation}°
             </button>
 
             {/* Rental Fee */}
-            <div className="flex items-center gap-1 font-mono text-xs">
-              <DollarSign className="w-3.5 h-3.5 text-emerald-500" />
+            <div className="flex items-center gap-1 font-mono">
+              <DollarSign style={{ width: 12, height: 12, color: '#3a7a50' }} />
               <input
                 type="number"
                 value={selectedInst.rentalFee || 0}
-                onChange={(e) =>
-                  onUpdateEstablishment({ ...selectedInst, rentalFee: Number(e.target.value) })
-                }
-                className="w-16 px-1 py-0.5 bg-slate-100 dark:bg-slate-800 border rounded text-xs font-mono"
-                title="Stall Daily Rental Fee"
+                onChange={(e) => onUpdateEstablishment({ ...selectedInst, rentalFee: Number(e.target.value) })}
+                style={{ width: 60, fontSize: 11, padding: '2px 4px', border: '1px solid #c8c0b0', borderRadius: 3, fontFamily: 'monospace', backgroundColor: '#f0ede6', color: '#2c2825' }}
+                title="Daily rental fee"
               />
             </div>
 
-            <div className="h-6 w-px bg-slate-200 dark:bg-slate-800" />
+            <div style={{ width: 1, height: 20, backgroundColor: '#c8c0b0' }} />
 
-            {/* Lock / Duplicate / Delete */}
+            {/* Lock / Dupe / Delete */}
             <button
-              onClick={() =>
-                onUpdateEstablishment({ ...selectedInst, isLocked: !selectedInst.isLocked })
-              }
-              className="p-1.5 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg text-slate-600 dark:text-slate-400"
-              title={selectedInst.isLocked ? 'Unlock position' : 'Lock position'}
+              onClick={() => onUpdateEstablishment({ ...selectedInst, isLocked: !selectedInst.isLocked })}
+              style={{ padding: '4px', border: 'none', background: 'transparent', cursor: 'pointer', color: selectedInst.isLocked ? '#b07030' : '#9c9388' }}
+              title={selectedInst.isLocked ? 'Unlock' : 'Lock'}
             >
-              {selectedInst.isLocked ? <Lock className="w-4 h-4 text-amber-500" /> : <Unlock className="w-4 h-4" />}
+              {selectedInst.isLocked ? <Lock style={{ width: 14, height: 14 }} /> : <Unlock style={{ width: 14, height: 14 }} />}
             </button>
-
             <button
               onClick={() => onDuplicateEstablishment(selectedInst.instanceId)}
-              className="p-1.5 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg text-blue-600 dark:text-blue-400"
-              title="Duplicate Stall"
+              style={{ padding: '4px', border: 'none', background: 'transparent', cursor: 'pointer', color: '#4a6fa5' }}
+              title="Duplicate"
             >
-              <Copy className="w-4 h-4" />
+              <Copy style={{ width: 14, height: 14 }} />
             </button>
-
             <button
               onClick={() => onDeleteEstablishment(selectedInst.instanceId)}
-              className="p-1.5 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg text-red-600 dark:text-red-400"
-              title="Delete Stall"
+              style={{ padding: '4px', border: 'none', background: 'transparent', cursor: 'pointer', color: '#b94040' }}
+              title="Delete"
             >
-              <Trash2 className="w-4 h-4" />
+              <Trash2 style={{ width: 14, height: 14 }} />
             </button>
           </div>
         ) : (
           <div />
         )}
 
-        {/* View Zoom & Reset controls */}
-        <div className="pointer-events-auto bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border border-slate-200 dark:border-slate-800 rounded-2xl shadow-lg p-1.5 flex items-center gap-1 text-xs">
+        {/* Zoom controls — sketch style */}
+        <div
+          className="pointer-events-auto flex items-center gap-0.5"
+          style={{ backgroundColor: '#faf8f4', border: '1.5px solid #c8c0b0', borderRadius: '4px', padding: '3px' }}
+        >
           <button
             onClick={() => setZoom((z) => Math.min(3, z + 0.2))}
-            className="p-1.5 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition"
+            style={{ padding: '4px 8px', border: 'none', background: 'transparent', cursor: 'pointer', fontSize: 14, color: '#5c5248' }}
             title="Zoom In"
           >
-            <ZoomIn className="w-4 h-4" />
+            <ZoomIn style={{ width: 14, height: 14 }} />
           </button>
-          <span className="font-mono text-[11px] font-bold px-1 text-slate-600 dark:text-slate-400">
+          <span style={{ fontFamily: 'monospace', fontSize: 10, color: '#9c9388', padding: '0 4px' }}>
             {Math.round(zoom * 100)}%
           </span>
           <button
             onClick={() => setZoom((z) => Math.max(0.4, z - 0.2))}
-            className="p-1.5 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition"
+            style={{ padding: '4px 8px', border: 'none', background: 'transparent', cursor: 'pointer', color: '#5c5248' }}
             title="Zoom Out"
           >
-            <ZoomOut className="w-4 h-4" />
+            <ZoomOut style={{ width: 14, height: 14 }} />
           </button>
-
-          <div className="h-4 w-px bg-slate-200 dark:bg-slate-800" />
-
+          <div style={{ width: 1, height: 16, backgroundColor: '#c8c0b0', margin: '0 2px' }} />
           <button
             onClick={handleResetView}
-            className="p-1.5 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition"
-            title="Reset Fit to Land"
+            style={{ padding: '4px 8px', border: 'none', background: 'transparent', cursor: 'pointer', color: '#5c5248' }}
+            title="Reset view"
           >
-            <Maximize className="w-4 h-4" />
+            <Maximize style={{ width: 14, height: 14 }} />
           </button>
         </div>
       </div>
 
-      {/* Road Inspector Panel (shown when a road is selected) */}
+      {/* Road Inspector Panel — sketch style */}
       {(() => {
         const selectedRoad = selectedRoadId ? project.roads.find((r) => r.id === selectedRoadId) : null;
         if (!selectedRoad) return null;
         return (
-          <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-20 pointer-events-auto bg-white dark:bg-slate-900 border border-blue-300 dark:border-blue-700 rounded-2xl shadow-2xl p-3 flex flex-wrap items-center gap-3 text-xs animate-in slide-in-from-bottom-3 min-w-max max-w-[90vw]">
-            {/* Road color swatch */}
-            <div className="flex items-center gap-1.5">
-              <div className="w-4 h-4 rounded-full shadow-sm border border-slate-200" style={{ backgroundColor: selectedRoad.color }} />
-              <span className="font-bold text-blue-600 dark:text-blue-400 uppercase tracking-wide text-[10px]">Road Selected</span>
-            </div>
+          <div
+            className="absolute bottom-6 left-1/2 -translate-x-1/2 z-20 pointer-events-auto flex flex-wrap items-center gap-3 text-xs animate-in"
+            style={{
+              backgroundColor: '#faf8f4',
+              border: '1.5px solid #4a6fa5',
+              borderRadius: '4px',
+              padding: '6px 12px',
+              boxShadow: '1px 3px 10px rgba(44,40,37,0.12)',
+              maxWidth: '90vw',
+            }}
+          >
+            <div style={{ width: 10, height: 10, borderRadius: '50%', backgroundColor: selectedRoad.color, border: '1px solid #c8c0b0' }} />
+            <span style={{ fontWeight: 600, color: '#4a6fa5', fontSize: 10, textTransform: 'uppercase', letterSpacing: '0.05em' }}>Road</span>
 
-            <div className="h-5 w-px bg-slate-200 dark:bg-slate-700" />
+            <div style={{ width: 1, height: 16, backgroundColor: '#c8c0b0' }} />
 
-            {/* Name */}
-            <div className="flex items-center gap-1">
-              <span className="text-slate-400 text-[10px]">Name:</span>
-              <input
-                type="text"
-                value={selectedRoad.name}
-                onChange={(e) => onUpdateRoad({ ...selectedRoad, name: e.target.value })}
-                className="px-1.5 py-0.5 bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg font-medium text-xs w-40"
-              />
-            </div>
+            <input
+              type="text"
+              value={selectedRoad.name}
+              onChange={(e) => onUpdateRoad({ ...selectedRoad, name: e.target.value })}
+              style={{ fontSize: 11, padding: '2px 6px', border: '1px solid #c8c0b0', borderRadius: 3, backgroundColor: '#f0ede6', color: '#2c2825', width: 140 }}
+            />
 
-            {/* Road Type */}
-            <div className="flex items-center gap-1">
-              <span className="text-slate-400 text-[10px]">Type:</span>
-              <select
-                value={selectedRoad.roadType}
-                onChange={(e) => {
-                  const rt = e.target.value as RoadType;
-                  const color = rt === 'main_avenue' ? '#475569' : rt === 'emergency_corridor' ? '#ef4444' : '#94a3b8';
-                  onUpdateRoad({ ...selectedRoad, roadType: rt, color });
-                }}
-                className="px-1.5 py-0.5 bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-xs font-medium"
-              >
-                <option value="main_avenue">Main Promenade</option>
-                <option value="pedestrian_path">Pedestrian Walkway</option>
-                <option value="service_road">Service Road</option>
-                <option value="emergency_corridor">Emergency Corridor</option>
-              </select>
-            </div>
-
-            {/* Width */}
-            <div className="flex items-center gap-1 font-mono">
-              <span className="text-slate-400 text-[10px]">Width:</span>
-              <select
-                value={selectedRoad.width}
-                onChange={(e) => onUpdateRoad({ ...selectedRoad, width: Number(e.target.value) })}
-                className="px-1.5 py-0.5 bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-xs font-mono"
-              >
-                <option value={3}>3m</option>
-                <option value={4}>4m</option>
-                <option value={6}>6m</option>
-                <option value={8}>8m</option>
-                <option value={10}>10m</option>
-              </select>
-            </div>
-
-            {/* Color picker */}
-            <div className="flex items-center gap-1">
-              <span className="text-slate-400 text-[10px]">Color:</span>
-              <input
-                type="color"
-                value={selectedRoad.color}
-                onChange={(e) => onUpdateRoad({ ...selectedRoad, color: e.target.value })}
-                className="w-7 h-7 rounded-lg border border-slate-200 dark:border-slate-700 cursor-pointer"
-                title="Road color"
-              />
-            </div>
-
-            <div className="h-5 w-px bg-slate-200 dark:bg-slate-700" />
-
-            {/* Points count info */}
-            <span className="text-[10px] text-slate-500 font-mono">
-              {selectedRoad.points.length} points • drag handles to reshape
-            </span>
-
-            <div className="h-5 w-px bg-slate-200 dark:bg-slate-700" />
-
-            {/* Delete road */}
-            <button
-              onClick={() => {
-                onDeleteRoad(selectedRoad.id);
-                setSelectedRoadId(null);
+            <select
+              value={selectedRoad.roadType}
+              onChange={(e) => {
+                const rt = e.target.value as RoadType;
+                const color = rt === 'main_avenue' ? '#6b7280' : rt === 'emergency_corridor' ? '#b94040' : '#a0a0a0';
+                onUpdateRoad({ ...selectedRoad, roadType: rt, color });
               }}
-              className="p-1.5 hover:bg-red-50 dark:hover:bg-red-950/40 rounded-lg text-red-600 dark:text-red-400 transition flex items-center gap-1"
-              title="Delete Road"
+              style={{ fontSize: 11, padding: '2px 6px', border: '1px solid #c8c0b0', borderRadius: 3, backgroundColor: '#f0ede6', color: '#2c2825', fontFamily: 'monospace' }}
             >
-              <Trash2 className="w-4 h-4" />
-              <span>Delete</span>
-            </button>
+              <option value="main_avenue">Main Avenue</option>
+              <option value="pedestrian_path">Pedestrian</option>
+              <option value="service_road">Service Road</option>
+              <option value="emergency_corridor">Emergency</option>
+            </select>
 
-            {/* Deselect */}
+            <select
+              value={selectedRoad.width}
+              onChange={(e) => onUpdateRoad({ ...selectedRoad, width: Number(e.target.value) })}
+              style={{ fontSize: 11, padding: '2px 6px', border: '1px solid #c8c0b0', borderRadius: 3, backgroundColor: '#f0ede6', color: '#2c2825', fontFamily: 'monospace' }}
+            >
+              {[3,4,6,8,10].map(w => <option key={w} value={w}>{w}m</option>)}
+            </select>
+
+            <input
+              type="color"
+              value={selectedRoad.color}
+              onChange={(e) => onUpdateRoad({ ...selectedRoad, color: e.target.value })}
+              style={{ width: 24, height: 24, border: '1px solid #c8c0b0', borderRadius: 3, cursor: 'pointer', padding: 0 }}
+            />
+
+            <div style={{ width: 1, height: 16, backgroundColor: '#c8c0b0' }} />
+
+            <span style={{ fontSize: 10, color: '#9c9388', fontStyle: 'italic' }}>{selectedRoad.points.length} pts · drag to reshape</span>
+
+            <button
+              onClick={() => { onDeleteRoad(selectedRoad.id); setSelectedRoadId(null); }}
+              style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: 11, padding: '3px 8px', border: '1px solid #b94040', borderRadius: 3, backgroundColor: 'transparent', color: '#b94040', cursor: 'pointer' }}
+            >
+              <Trash2 style={{ width: 12, height: 12 }} /> Delete
+            </button>
             <button
               onClick={() => setSelectedRoadId(null)}
-              className="p-1.5 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg text-slate-500 transition text-[10px] font-medium"
-              title="Deselect"
+              style={{ fontSize: 10, padding: '3px 8px', border: '1px solid #c8c0b0', borderRadius: 3, backgroundColor: 'transparent', color: '#9c9388', cursor: 'pointer' }}
             >
-              ✕ Close
+              ✕
             </button>
           </div>
         );
       })()}
 
-      {/* Road drawing banner notice */}
+      {/* Road drawing hint */}
       {activeTool === 'draw_road' && activeRoadPoints.length > 0 && (
-        <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-20 bg-blue-600 text-white text-xs px-4 py-2 rounded-xl shadow-xl flex items-center gap-3 animate-bounce">
-          <span>Click points on map to build road segments ({activeRoadPoints.length} points added)</span>
+        <div
+          className="absolute bottom-6 left-1/2 -translate-x-1/2 z-20 flex items-center gap-3 text-xs"
+          style={{
+            backgroundColor: '#faf8f4',
+            border: '1.5px solid #4a6fa5',
+            borderRadius: '4px',
+            padding: '6px 14px',
+            boxShadow: '1px 2px 8px rgba(44,40,37,0.12)',
+            color: '#2c2825',
+          }}
+        >
+          <span>Adding road — {activeRoadPoints.length} point{activeRoadPoints.length > 1 ? 's' : ''}</span>
           <button
             onClick={handleFinishRoad}
-            className="px-2.5 py-1 bg-white text-blue-600 font-bold rounded-lg hover:bg-blue-50 transition"
+            style={{ fontSize: 11, fontWeight: 600, padding: '3px 10px', border: '1px solid #4a6fa5', borderRadius: 3, backgroundColor: '#d9e5f5', color: '#4a6fa5', cursor: 'pointer' }}
           >
-            Finish Road Path
+            Finish
           </button>
         </div>
       )}
@@ -620,7 +599,7 @@ export const CanvasMap: React.FC<CanvasMapProps> = ({
         className="w-full h-full cursor-crosshair"
       >
         <defs>
-          {/* Grid pattern */}
+          {/* Paper graph-paper grid */}
           <pattern
             id="gridPattern"
             width={gridStep * METERS_TO_PX}
@@ -630,107 +609,46 @@ export const CanvasMap: React.FC<CanvasMapProps> = ({
             <path
               d={`M ${gridStep * METERS_TO_PX} 0 L 0 0 0 ${gridStep * METERS_TO_PX}`}
               fill="none"
-              stroke={
-                project.blueprintMode ? 'rgba(56, 189, 248, 0.15)' : 'rgba(148, 163, 184, 0.25)'
-              }
-              strokeWidth="0.8"
+              stroke={project.blueprintMode ? 'rgba(100,160,220,0.2)' : 'rgba(160,150,130,0.25)'}
+              strokeWidth="0.6"
             />
           </pattern>
-
-          {/* Blueprint style diagonal grid */}
-          <pattern
-            id="blueprintHatch"
-            width="20"
-            height="20"
-            patternTransform="rotate(45 0 0)"
-            patternUnits="userSpaceOnUse"
-          >
-            <line x1="0" y1="0" x2="0" y2="20" stroke="rgba(56, 189, 248, 0.08)" strokeWidth="1" />
+          {/* Hatch pattern for establishments */}
+          <pattern id="hatch" width="6" height="6" patternTransform="rotate(45)" patternUnits="userSpaceOnUse">
+            <line x1="0" y1="0" x2="0" y2="6" stroke="rgba(44,40,37,0.18)" strokeWidth="1" />
           </pattern>
         </defs>
 
         <g transform={`translate(${pan.x}, ${pan.y}) scale(${zoom})`}>
-          {/* Ground Base Outer Boundary */}
+          {/* Land boundary — pencil-stroke style */}
           <rect
-            x={0}
-            y={0}
+            x={0} y={0}
             width={landPixelW}
             height={landPixelH}
-            fill={project.blueprintMode ? '#0f172a' : '#ffffff'}
-            stroke={project.blueprintMode ? '#38bdf8' : '#334155'}
-            strokeWidth="3"
-            rx={project.landDimensions.shape === 'oval' ? landPixelW / 2 : 4}
-            className="transition-colors duration-300"
+            fill={project.blueprintMode ? '#0d1e38' : '#fffef9'}
+            stroke={project.blueprintMode ? '#5a8fc0' : '#8a7d6a'}
+            strokeWidth="2"
+            rx={project.landDimensions.shape === 'oval' ? landPixelW / 2 : 2}
           />
-
-          {/* Blueprint Hatch Fill */}
-          {project.blueprintMode && (
-            <rect
-              x={0}
-              y={0}
-              width={landPixelW}
-              height={landPixelH}
-              fill="url(#blueprintHatch)"
-              pointerEvents="none"
-            />
-          )}
-
-          {/* Grid Overlay */}
+           {/* Grid overlay — graph paper */}
           {project.landDimensions.gridVisible && (
-            <rect
-              x={0}
-              y={0}
-              width={landPixelW}
-              height={landPixelH}
-              fill="url(#gridPattern)"
-              pointerEvents="none"
-            />
+            <rect x={0} y={0} width={landPixelW} height={landPixelH} fill="url(#gridPattern)" pointerEvents="none" />
           )}
 
-          {/* Ruler Dimensions Marks around Land Boundary */}
+          {/* Dimension marks — thin ink lines */}
           {project.dimensionsVisible && (
-            <g className="text-[10px] font-mono select-none" pointerEvents="none">
-              {/* Top Ruler Width */}
-              <line
-                x1={0}
-                y1={-12}
-                x2={landPixelW}
-                y2={-12}
-                stroke={project.blueprintMode ? '#38bdf8' : '#475569'}
-                strokeWidth="1.5"
-              />
-              <line x1={0} y1={-18} x2={0} y2={-6} stroke={project.blueprintMode ? '#38bdf8' : '#475569'} strokeWidth="1.5" />
-              <line x1={landPixelW} y1={-18} x2={landPixelW} y2={-6} stroke={project.blueprintMode ? '#38bdf8' : '#475569'} strokeWidth="1.5" />
-              <text
-                x={landPixelW / 2}
-                y={-16}
-                fill={project.blueprintMode ? '#38bdf8' : '#0f172a'}
-                textAnchor="middle"
-                className="font-bold"
-              >
-                {landW} {project.landDimensions.unit === 'meters' ? 'm' : 'ft'} (Width)
+            <g pointerEvents="none" style={{ fontSize: 10, fontFamily: 'monospace' }}>
+              <line x1={0} y1={-10} x2={landPixelW} y2={-10} stroke={project.blueprintMode ? '#5a8fc0' : '#8a7d6a'} strokeWidth="1" />
+              <line x1={0} y1={-14} x2={0} y2={-6} stroke={project.blueprintMode ? '#5a8fc0' : '#8a7d6a'} strokeWidth="1" />
+              <line x1={landPixelW} y1={-14} x2={landPixelW} y2={-6} stroke={project.blueprintMode ? '#5a8fc0' : '#8a7d6a'} strokeWidth="1" />
+              <text x={landPixelW / 2} y={-13} fill={project.blueprintMode ? '#5a8fc0' : '#5c5248'} textAnchor="middle" fontSize={9}>
+                {landW}{project.landDimensions.unit === 'meters' ? 'm' : 'ft'}
               </text>
-
-              {/* Left Ruler Depth */}
-              <line
-                x1={-12}
-                y1={0}
-                x2={-12}
-                y2={landPixelH}
-                stroke={project.blueprintMode ? '#38bdf8' : '#475569'}
-                strokeWidth="1.5"
-              />
-              <line x1={-18} y1={0} x2={-6} y2={0} stroke={project.blueprintMode ? '#38bdf8' : '#475569'} strokeWidth="1.5" />
-              <line x1={-18} y1={landPixelH} x2={-6} y2={landPixelH} stroke={project.blueprintMode ? '#38bdf8' : '#475569'} strokeWidth="1.5" />
-              <text
-                x={-16}
-                y={landPixelH / 2}
-                fill={project.blueprintMode ? '#38bdf8' : '#0f172a'}
-                textAnchor="middle"
-                transform={`rotate(-90, -16, ${landPixelH / 2})`}
-                className="font-bold"
-              >
-                {landH} {project.landDimensions.unit === 'meters' ? 'm' : 'ft'} (Length)
+              <line x1={-10} y1={0} x2={-10} y2={landPixelH} stroke={project.blueprintMode ? '#5a8fc0' : '#8a7d6a'} strokeWidth="1" />
+              <line x1={-14} y1={0} x2={-6} y2={0} stroke={project.blueprintMode ? '#5a8fc0' : '#8a7d6a'} strokeWidth="1" />
+              <line x1={-14} y1={landPixelH} x2={-6} y2={landPixelH} stroke={project.blueprintMode ? '#5a8fc0' : '#8a7d6a'} strokeWidth="1" />
+              <text x={-13} y={landPixelH / 2} fill={project.blueprintMode ? '#5a8fc0' : '#5c5248'} textAnchor="middle" transform={`rotate(-90,-13,${landPixelH/2})`} fontSize={9}>
+                {landH}{project.landDimensions.unit === 'meters' ? 'm' : 'ft'}
               </text>
             </g>
           )}
@@ -776,24 +694,24 @@ export const CanvasMap: React.FC<CanvasMapProps> = ({
             />
           )}
 
-          {/* Roads & Walkways */}
+          {/* Roads — sketch thin lines */}
           {project.roads.map((road) => {
             if (road.points.length < 2) return null;
             const pathData = road.points
               .map((p, i) => `${i === 0 ? 'M' : 'L'} ${p.x * METERS_TO_PX} ${p.y * METERS_TO_PX}`)
               .join(' ');
             const isSelectedRoad = selectedRoadId === road.id;
+            const sketchColor = road.roadType === 'emergency_corridor' ? '#b94040'
+              : road.roadType === 'pedestrian_path' ? '#7a9a6a'
+              : road.roadType === 'service_road' ? '#9a8a5a'
+              : '#6b7280';
 
             return (
-              <g key={road.id} className="group">
-                {/* Invisible thick hit area for easy clicking */}
-                <path
-                  d={pathData}
-                  fill="none"
-                  stroke="transparent"
-                  strokeWidth={Math.max(road.width * METERS_TO_PX, 24)}
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
+              <g key={road.id}>
+                {/* Hit area */}
+                <path d={pathData} fill="none" stroke="transparent"
+                  strokeWidth={Math.max(road.width * METERS_TO_PX, 20)}
+                  strokeLinecap="round" strokeLinejoin="round"
                   style={{ cursor: activeTool === 'select' ? 'pointer' : 'default' }}
                   onClick={(e) => {
                     if (activeTool !== 'select') return;
@@ -802,140 +720,88 @@ export const CanvasMap: React.FC<CanvasMapProps> = ({
                     onSelectEstablishment(null);
                   }}
                 />
-                {/* Road surface stroke */}
-                <path
-                  d={pathData}
-                  fill="none"
-                  stroke={road.color}
+                {/* Road fill — muted fill */}
+                <path d={pathData} fill="none"
+                  stroke={road.color || sketchColor}
                   strokeWidth={road.width * METERS_TO_PX}
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  opacity={project.blueprintMode ? 0.7 : 0.85}
+                  strokeLinecap="round" strokeLinejoin="round"
+                  opacity={0.25}
                   style={{ pointerEvents: 'none' }}
                 />
-                {/* Center line dash */}
-                <path
-                  d={pathData}
-                  fill="none"
-                  stroke="#ffffff"
-                  strokeWidth="2"
-                  strokeDasharray="8 8"
-                  opacity={0.6}
+                {/* Road edge lines — thin sketch strokes */}
+                <path d={pathData} fill="none"
+                  stroke={road.color || sketchColor}
+                  strokeWidth="1.5"
+                  strokeLinecap="round" strokeLinejoin="round"
+                  opacity={0.7}
+                  strokeDasharray={road.roadType === 'pedestrian_path' ? '4 3' : 'none'}
                   style={{ pointerEvents: 'none' }}
                 />
-                {/* Selection highlight outline */}
+                {/* Selection highlight */}
                 {isSelectedRoad && (
-                  <path
-                    d={pathData}
-                    fill="none"
-                    stroke="#3b82f6"
-                    strokeWidth={road.width * METERS_TO_PX + 6}
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    opacity={0.35}
-                    style={{ pointerEvents: 'none' }}
+                  <path d={pathData} fill="none" stroke="#4a6fa5"
+                    strokeWidth={road.width * METERS_TO_PX + 4}
+                    strokeLinecap="round" strokeLinejoin="round"
+                    opacity={0.2} style={{ pointerEvents: 'none' }}
                   />
                 )}
-                {/* Road label */}
+                {/* Label */}
                 <text
                   x={(road.points[0].x + road.points[road.points.length - 1].x) * 0.5 * METERS_TO_PX}
-                  y={
-                    (road.points[0].y + road.points[road.points.length - 1].y) * 0.5 * METERS_TO_PX -
-                    road.width * METERS_TO_PX * 0.5 - 6
-                  }
-                  fill={project.blueprintMode ? '#f8fafc' : '#1e293b'}
-                  className="text-[10px] font-bold font-mono tracking-wider"
+                  y={(road.points[0].y + road.points[road.points.length - 1].y) * 0.5 * METERS_TO_PX - road.width * METERS_TO_PX * 0.5 - 4}
+                  fill={road.color || sketchColor}
                   textAnchor="middle"
-                  style={{ pointerEvents: 'none' }}
+                  style={{ pointerEvents: 'none', fontSize: 9, fontFamily: 'monospace', opacity: 0.8 }}
                 >
-                  {road.name} ({road.width}m)
+                  {road.name}
                 </text>
-
-                {/* Control Point Handles (visible when selected) */}
+                {/* Control handles */}
                 {isSelectedRoad && road.points.map((pt, ptIdx) => (
                   <g key={ptIdx}>
-                    <circle
-                      cx={pt.x * METERS_TO_PX}
-                      cy={pt.y * METERS_TO_PX}
-                      r={8}
-                      fill="#ffffff"
-                      stroke="#3b82f6"
-                      strokeWidth="3"
+                    <circle cx={pt.x * METERS_TO_PX} cy={pt.y * METERS_TO_PX} r={6}
+                      fill="#faf8f4" stroke="#4a6fa5" strokeWidth="1.5"
                       style={{ cursor: 'grab' }}
-                      onMouseDown={(e) => {
-                        e.stopPropagation();
-                        setDraggingPointInfo({ roadId: road.id, pointIndex: ptIdx });
-                      }}
+                      onMouseDown={(e) => { e.stopPropagation(); setDraggingPointInfo({ roadId: road.id, pointIndex: ptIdx }); }}
                     />
-                    <text
-                      x={pt.x * METERS_TO_PX}
-                      y={pt.y * METERS_TO_PX + 4}
-                      fill="#3b82f6"
-                      textAnchor="middle"
-                      className="text-[9px] font-bold"
-                      style={{ pointerEvents: 'none', fontSize: '9px', fontWeight: 'bold' }}
-                    >
-                      {ptIdx + 1}
-                    </text>
+                    <text x={pt.x * METERS_TO_PX} y={pt.y * METERS_TO_PX + 3}
+                      fill="#4a6fa5" textAnchor="middle"
+                      style={{ pointerEvents: 'none', fontSize: 7, fontFamily: 'monospace' }}
+                    >{ptIdx + 1}</text>
                   </g>
                 ))}
               </g>
             );
           })}
 
-          {/* Active Drawing Road Points preview */}
+          {/* Active road drawing preview */}
           {activeRoadPoints.length > 0 && (
             <path
-              d={activeRoadPoints
-                .map((p, i) => `${i === 0 ? 'M' : 'L'} ${p.x * METERS_TO_PX} ${p.y * METERS_TO_PX}`)
-                .join(' ')}
-              fill="none"
-              stroke="#3b82f6"
+              d={activeRoadPoints.map((p, i) => `${i === 0 ? 'M' : 'L'} ${p.x * METERS_TO_PX} ${p.y * METERS_TO_PX}`).join(' ')}
+              fill="none" stroke="#4a6fa5"
               strokeWidth={roadWidth * METERS_TO_PX}
-              strokeDasharray="6 6"
-              opacity={0.6}
+              strokeDasharray="5 4" opacity={0.35}
             />
           )}
 
-          {/* Waypoints & Entrances */}
+          {/* Waypoints — simple pin marks */}
           {project.waypoints.map((wp) => {
             const px = wp.x * METERS_TO_PX;
             const py = wp.y * METERS_TO_PX;
-
+            const col = wp.type === 'main_entrance' ? '#3a7a50'
+              : wp.type === 'emergency_exit' ? '#b94040'
+              : '#4a6fa5';
+            const abbr = wp.type === 'main_entrance' ? 'G' : wp.type === 'emergency_exit' ? 'X' : '·';
             return (
-              <g key={wp.id} className="cursor-pointer group">
-                <circle
-                  cx={px}
-                  cy={py}
-                  r="14"
-                  fill={wp.color}
-                  className="shadow-lg transition-transform hover:scale-110"
-                />
-                <circle cx={px} cy={py} r="18" fill="none" stroke={wp.color} strokeWidth="2" opacity="0.4" />
-                <text
-                  x={px}
-                  y={py + 4}
-                  fill="#ffffff"
-                  textAnchor="middle"
-                  className="text-[11px] font-bold font-mono"
-                >
-                  {wp.type === 'main_entrance' ? 'GATE' : wp.type === 'emergency_exit' ? 'EXIT' : 'WP'}
-                </text>
-                {/* Waypoint Label */}
-                <text
-                  x={px}
-                  y={py + 30}
-                  fill={project.blueprintMode ? '#ffffff' : '#0f172a'}
-                  textAnchor="middle"
-                  className="text-[11px] font-bold"
-                >
-                  {wp.name}
-                </text>
+              <g key={wp.id} style={{ cursor: 'pointer' }}>
+                <circle cx={px} cy={py} r={10} fill={col} opacity={0.15} />
+                <circle cx={px} cy={py} r={7} fill="#faf8f4" stroke={col} strokeWidth="1.5" />
+                <text x={px} y={py + 3} fill={col} textAnchor="middle" style={{ fontSize: 8, fontFamily: 'monospace', fontWeight: 700 }}>{abbr}</text>
+                <text x={px} y={py + 20} fill={col} textAnchor="middle" style={{ fontSize: 8, fontFamily: 'monospace' }}>{wp.name}</text>
               </g>
             );
           })}
 
-          {/* Placed Retail Establishments */}
+          {/* Establishments — sketch hatched boxes */}
           {project.establishments.map((inst) => {
             const isSelected = selectedEstablishmentId === inst.instanceId;
             const isColliding = collidingIds.has(inst.instanceId);
@@ -945,160 +811,99 @@ export const CanvasMap: React.FC<CanvasMapProps> = ({
             const pw = inst.width * METERS_TO_PX;
             const pd = inst.depth * METERS_TO_PX;
 
+            // Muted sketch colors
+            const sketchFill = inst.color + '28'; // very transparent fill
+            const sketchStroke = isColliding ? '#b94040' : isSelected ? '#4a6fa5' : '#8a7d6a';
+            const sketchStrokeW = isSelected ? 1.5 : 1;
+
             return (
               <g
                 key={inst.instanceId}
                 transform={`rotate(${inst.rotation}, ${px + pw / 2}, ${py + pd / 2})`}
                 onMouseDown={(e) => handleEstablishmentMouseDown(e, inst)}
-                className="cursor-move group"
+                style={{ cursor: 'move' }}
               >
-                {/* Main Establishment Rectangle */}
+                {/* Hatch fill */}
+                <rect x={px} y={py} width={pw} height={pd} fill="url(#hatch)" opacity={0.4} />
+                {/* Color tint */}
+                <rect x={px} y={py} width={pw} height={pd} fill={sketchFill} />
+                {/* Border */}
                 <rect
-                  x={px}
-                  y={py}
-                  width={pw}
-                  height={pd}
-                  fill={inst.color}
-                  fillOpacity={project.blueprintMode ? 0.8 : 0.9}
-                  stroke={
-                    isColliding
-                      ? '#ef4444'
-                      : isSelected
-                      ? '#2563eb'
-                      : project.blueprintMode
-                      ? '#ffffff'
-                      : '#1e293b'
-                  }
-                  strokeWidth={isColliding ? 3 : isSelected ? 3 : 1.5}
-                  rx="6"
-                  className="transition-all shadow-md"
+                  x={px} y={py} width={pw} height={pd}
+                  fill="none"
+                  stroke={sketchStroke}
+                  strokeWidth={sketchStrokeW}
+                  strokeDasharray={isColliding ? '4 2' : 'none'}
+                  rx={1}
                 />
 
-                {/* Colliding Flashing Aura */}
-                {isColliding && (
-                  <rect
-                    x={px - 3}
-                    y={py - 3}
-                    width={pw + 6}
-                    height={pd + 6}
-                    fill="none"
-                    stroke="#ef4444"
-                    strokeWidth="2"
-                    strokeDasharray="4 4"
-                    className="animate-pulse"
-                  />
-                )}
-
-                {/* Lock icon if locked */}
-                {inst.isLocked && (
-                  <circle cx={px + 12} cy={py + 12} r="8" fill="#000000" fillOpacity="0.4" />
-                )}
-
-                {/* Stall Number Badge */}
-                <rect
-                  x={px + 4}
-                  y={py + 4}
-                  width={34}
-                  height={16}
-                  fill="#000000"
-                  fillOpacity={0.6}
-                  rx="3"
-                />
+                {/* Stall number — top-left corner */}
                 <text
-                  x={px + 21}
-                  y={py + 15}
-                  fill="#ffffff"
-                  textAnchor="middle"
-                  className="text-[9px] font-mono font-bold"
+                  x={px + 4} y={py + 10}
+                  fill={sketchStroke}
+                  style={{ fontSize: 8, fontFamily: 'monospace', fontWeight: 600 }}
                 >
                   {inst.stallNumber}
                 </text>
 
-                {/* Stall Title & Dimensions text inside box if large enough */}
+                {/* Name inside if large enough */}
                 {pw >= 40 && pd >= 30 && (
-                  <g pointerEvents="none">
-                    <text
-                      x={px + pw / 2}
-                      y={py + pd / 2 - 2}
-                      fill="#ffffff"
-                      textAnchor="middle"
-                      className="text-[11px] font-bold drop-shadow-sm"
-                    >
-                      {inst.name.length > 18 ? inst.name.substring(0, 16) + '...' : inst.name}
-                    </text>
-                    <text
-                      x={px + pw / 2}
-                      y={py + pd / 2 + 12}
-                      fill="rgba(255,255,255,0.8)"
-                      textAnchor="middle"
-                      className="text-[9px] font-mono"
-                    >
-                      {inst.width}m x {inst.depth}m
-                    </text>
-                  </g>
+                  <text
+                    x={px + pw / 2} y={py + pd / 2 + 2}
+                    fill="#2c2825" textAnchor="middle"
+                    style={{ fontSize: 9, fontFamily: 'Inter, sans-serif', opacity: 0.8 }}
+                  >
+                    {inst.name.length > 16 ? inst.name.substring(0, 14) + '…' : inst.name}
+                  </text>
+                )}
+                {pw >= 40 && pd >= 42 && (
+                  <text
+                    x={px + pw / 2} y={py + pd / 2 + 14}
+                    fill="#5c5248" textAnchor="middle"
+                    style={{ fontSize: 8, fontFamily: 'monospace', opacity: 0.7 }}
+                  >
+                    {inst.width}×{inst.depth}m
+                  </text>
                 )}
 
-                {/* Selected Handles */}
+                {/* Lock mark */}
+                {inst.isLocked && (
+                  <text x={px + pw - 10} y={py + 10} fill="#b07030" style={{ fontSize: 8 }}>🔒</text>
+                )}
+
+                {/* Resize handle */}
                 {isSelected && !inst.isLocked && (
-                  <g>
-                    {/* Bottom-right Resize Handle */}
-                    <circle
-                      cx={px + pw}
-                      cy={py + pd}
-                      r="6"
-                      fill="#2563eb"
-                      stroke="#ffffff"
-                      strokeWidth="2"
-                      className="cursor-nwse-resize hover:scale-125 transition-transform"
-                      onMouseDown={(e) => handleResizeHandleMouseDown(e, inst)}
-                    />
-                  </g>
+                  <rect
+                    x={px + pw - 6} y={py + pd - 6} width={6} height={6}
+                    fill="#4a6fa5" stroke="#faf8f4" strokeWidth={1}
+                    style={{ cursor: 'nwse-resize' }}
+                    onMouseDown={(e) => handleResizeHandleMouseDown(e, inst)}
+                  />
                 )}
               </g>
             );
           })}
-        </g>
 
-        {/* Fixed Title Block in SVG for High-Res SVG/PNG Export */}
-        {project.legendVisible && (
-          <g transform="translate(20, 20)" className="select-none" pointerEvents="none">
-            <rect
-              x="0"
-              y="0"
-              width="260"
-              height="85"
-              fill={project.blueprintMode ? '#0f172a' : '#ffffff'}
-              fillOpacity={0.9}
-              stroke={project.blueprintMode ? '#334155' : '#e2e8f0'}
-              strokeWidth="1.5"
-              rx="12"
-            />
-            <text
-              x="16"
-              y="28"
-              fill={project.blueprintMode ? '#f8fafc' : '#0f172a'}
-              className="text-xs font-bold"
-            >
-              {project.title}
-            </text>
-            <text
-              x="16"
-              y="48"
-              fill={project.blueprintMode ? '#94a3b8' : '#64748b'}
-              className="text-[10px]"
-            >
-              Host: {project.hostName} | {project.eventDate}
-            </text>
-            <text
-              x="16"
-              y="66"
-              fill={project.blueprintMode ? '#38bdf8' : '#2563eb'}
-              className="text-[10px] font-mono font-bold"
-            >
-              Area: {landW}m x {landH}m ({landW * landH} m²) | Stalls: {project.establishments.length}
-            </text>
-          </g>
-        )}
+          {/* Title block for export — sketch style */}
+          {project.legendVisible && (
+            <g transform="translate(16, 16)" style={{ pointerEvents: 'none' }}>
+              <rect x={0} y={0} width={220} height={62}
+                fill="#faf8f4" fillOpacity={0.92}
+                stroke="#c8c0b0" strokeWidth={1}
+                rx={2}
+              />
+              <text x={10} y={20} fill="#2c2825" style={{ fontSize: 11, fontWeight: 700, fontFamily: 'Inter, sans-serif' }}>
+                {project.title}
+              </text>
+              <text x={10} y={36} fill="#5c5248" style={{ fontSize: 9, fontFamily: 'monospace' }}>
+                {project.hostName} · {project.eventDate}
+              </text>
+              <text x={10} y={52} fill="#4a6fa5" style={{ fontSize: 9, fontFamily: 'monospace' }}>
+                {landW}m × {landH}m = {landW * landH}m² · {project.establishments.length} stalls
+              </text>
+            </g>
+          )}
+        </g>
       </svg>
     </div>
   );

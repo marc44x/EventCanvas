@@ -11,7 +11,7 @@ import {
   ZoneOverlay,
   LandDimensions,
 } from './types';
-import { DEFAULT_ESTABLISHMENT_VARIABLES, PRESET_PROJECT_TEMPLATES } from './data/defaultVariables';
+import { DEFAULT_ESTABLISHMENT_VARIABLES } from './data/defaultVariables';
 import { HeaderNavbar } from './components/HeaderNavbar';
 import { EstablishmentCatalog } from './components/EstablishmentCatalog';
 import { RoadWaypointToolbar } from './components/RoadWaypointToolbar';
@@ -20,10 +20,51 @@ import { LandDimensionsModal } from './components/LandDimensionsModal';
 import { ExportModal } from './components/ExportModal';
 import { AnalyticsPanel } from './components/AnalyticsPanel';
 import { AIAdvisorModal } from './components/AIAdvisorModal';
+import { OnboardingSetup } from './components/OnboardingSetup';
 
 export default function App() {
-  // Main Event Project State initialized with rich default template
-  const [project, setProject] = useState<EventLayoutProject>(PRESET_PROJECT_TEMPLATES[0]);
+  // Project starts as null until the host completes onboarding
+  const [project, setProject] = useState<EventLayoutProject | null>(null);
+
+  // Handler called when host completes the onboarding setup form
+  const handleOnboardingComplete = (data: {
+    title: string;
+    hostName: string;
+    locationName: string;
+    eventDate: string;
+    width: number;
+    height: number;
+    unit: 'meters' | 'feet';
+    shape: 'rectangular' | 'l_shaped' | 'oval' | 'zoned';
+    gridSnap: number;
+  }) => {
+    const emptyProject: EventLayoutProject = {
+      id: `project-${Date.now()}`,
+      title: data.title,
+      hostName: data.hostName,
+      locationName: data.locationName,
+      eventDate: data.eventDate,
+      landDimensions: {
+        width: data.width,
+        height: data.height,
+        unit: data.unit,
+        shape: data.shape,
+        gridSnap: data.gridSnap,
+        gridVisible: true,
+      },
+      establishments: [],
+      roads: [],
+      waypoints: [],
+      customVariables: [],
+      legendVisible: true,
+      labelsVisible: true,
+      blueprintMode: false,
+      dimensionsVisible: true,
+      zoneOverlays: [],
+    };
+    setProject(emptyProject);
+  };
+
 
   // Catalog variables
   const [establishmentVariables, setEstablishmentVariables] = useState<EstablishmentVariable[]>(
@@ -255,6 +296,11 @@ export default function App() {
       setSelectedEstablishmentId(null);
     }
   };
+
+  // Show onboarding if project hasn't been configured yet
+  if (!project) {
+    return <OnboardingSetup onComplete={handleOnboardingComplete} />;
+  }
 
   return (
     <div className="flex flex-col h-screen w-screen overflow-hidden bg-slate-100 dark:bg-slate-950 font-sans">

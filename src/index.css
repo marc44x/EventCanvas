@@ -1,1 +1,47 @@
+@import url('https://fonts.googleapis.com/css2?family=Caveat:wght@400;600;700&family=Inter:wght@300;400;500;600;700&display=swap');
 @import "tailwindcss";
+
+/* ── Paper Sketch Theme Tokens ── */
+:root {
+  --paper:      #faf8f4;
+  --paper-mid:  #f0ede6;
+  --paper-dark: #e8e3d8;
+  --ink:        #2c2825;
+  --ink-mid:    #5c5248;
+  --ink-light:  #9c9388;
+  --pencil:     #b0a898;
+  --accent:     #4a6fa5;
+  --accent-lt:  #d9e5f5;
+  --red-mark:   #b94040;
+  --amber-mark: #b07030;
+  --green-mark: #3a7a50;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html, body, #root {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  font-family: 'Inter', sans-serif;
+  background: var(--paper);
+  color: var(--ink);
+}
+
+button, input, select, textarea {
+  font-family: 'Inter', sans-serif;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: var(--paper-mid); }
+::-webkit-scrollbar-thumb { background: var(--pencil); border-radius: 3px; }
+
+/* Animate-in */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.animate-in { animation: fadeIn 0.2s ease both; }
