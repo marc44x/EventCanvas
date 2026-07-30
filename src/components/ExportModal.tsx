@@ -10,6 +10,33 @@ interface ExportModalProps {
   svgRef: React.RefObject<SVGSVGElement | null>;
 }
 
+const COLORS = {
+  paper: '#faf8f4',
+  pencil: '#c8c0b0',
+  ink: '#2c2825',
+  mutedInk: '#5c5248',
+  greyInk: '#9c9388',
+  blue: '#4a6fa5',
+  green: '#3a7a50',
+  red: '#b94040',
+  headerBg: '#f0ede6',
+  cardBorder: '#ddd8ce',
+  divider: '#e8e3d8',
+  blueBg: '#d9e5f5',
+  blueText: '#2c4a7a',
+};
+
+const sectionLabelStyle: React.CSSProperties = {
+  display: 'block',
+  fontSize: 9,
+  fontWeight: 700,
+  color: COLORS.greyInk,
+  textTransform: 'uppercase',
+  letterSpacing: '0.12em',
+  fontFamily: 'monospace',
+  marginBottom: 8,
+};
+
 export const ExportModal: React.FC<ExportModalProps> = ({ isOpen, onClose, project, svgRef }) => {
   const [format, setFormat] = useState<'svg' | 'png' | 'json'>('png');
   const [pngScale, setPngScale] = useState<number>(2); // 2x high dpi default
@@ -53,119 +80,173 @@ export const ExportModal: React.FC<ExportModalProps> = ({ isOpen, onClose, proje
     }
   };
 
+  const formatBtnStyle = (active: boolean): React.CSSProperties => ({
+    padding: '10px 8px',
+    border: active ? `1px solid ${COLORS.blue}` : `1px solid ${COLORS.pencil}`,
+    backgroundColor: active ? COLORS.blueBg : 'transparent',
+    color: active ? COLORS.blueText : COLORS.mutedInk,
+    borderRadius: 3,
+    cursor: 'pointer',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 6,
+    transition: 'border-color 0.15s, background-color 0.15s',
+  });
+
+  const scaleBtnStyle = (active: boolean): React.CSSProperties => ({
+    padding: '7px 10px',
+    border: active ? `1px solid ${COLORS.blue}` : `1px solid ${COLORS.pencil}`,
+    backgroundColor: active ? COLORS.blueBg : 'transparent',
+    color: active ? COLORS.blueText : COLORS.mutedInk,
+    borderRadius: 3,
+    fontSize: 11,
+    fontFamily: 'monospace',
+    fontWeight: active ? 700 : 500,
+    cursor: 'pointer',
+    transition: 'border-color 0.15s, background-color 0.15s',
+  });
+
+  const themeBtnStyle = (active: boolean): React.CSSProperties => ({
+    padding: '7px 10px',
+    border: active ? `1px solid ${COLORS.blue}` : `1px solid ${COLORS.pencil}`,
+    backgroundColor: active ? COLORS.blueBg : 'transparent',
+    color: active ? COLORS.blueText : COLORS.mutedInk,
+    borderRadius: 3,
+    fontSize: 11,
+    fontWeight: active ? 700 : 500,
+    cursor: 'pointer',
+    transition: 'border-color 0.15s, background-color 0.15s',
+  });
+
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4 animate-in fade-in duration-200">
-      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-2xl w-full max-w-lg overflow-hidden flex flex-col">
+    <div
+      style={{
+        position: 'fixed',
+        inset: 0,
+        zIndex: 50,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: 'rgba(0,0,0,0.4)',
+        padding: 16,
+      }}
+      className="animate-in fade-in duration-200"
+    >
+      <div
+        style={{
+          backgroundColor: COLORS.paper,
+          border: `1.5px solid ${COLORS.pencil}`,
+          borderRadius: 4,
+          boxShadow: '2px 4px 16px rgba(44,40,37,0.15)',
+          width: '100%',
+          maxWidth: 512,
+          overflow: 'hidden',
+          display: 'flex',
+          flexDirection: 'column',
+        }}
+      >
         {/* Header */}
-        <div className="px-6 py-4 bg-slate-50 dark:bg-slate-800/50 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="p-2 bg-blue-500/10 text-blue-600 dark:text-blue-400 rounded-lg">
-              <Download className="w-5 h-5" />
+        <div
+          style={{
+            padding: '14px 20px',
+            backgroundColor: COLORS.headerBg,
+            borderBottom: `1px solid ${COLORS.cardBorder}`,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+          }}
+        >
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+            <div style={{ color: COLORS.blue, display: 'flex' }}>
+              <Download style={{ width: 18, height: 18 }} />
             </div>
             <div>
-              <h2 className="text-lg font-bold text-slate-900 dark:text-white">Export Event Land Map</h2>
-              <p className="text-xs text-slate-500 dark:text-slate-400">
+              <h2 style={{ fontSize: 14, fontWeight: 700, color: COLORS.ink, margin: 0 }}>Export Event Land Map</h2>
+              <p style={{ fontSize: 11, color: COLORS.greyInk, margin: '2px 0 0' }}>
                 High-resolution SVG, PNG image, or layout project download
               </p>
             </div>
           </div>
           <button
             onClick={onClose}
-            className="p-1.5 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition"
+            style={{
+              padding: '4px 6px',
+              color: COLORS.greyInk,
+              background: 'transparent',
+              border: `1px solid ${COLORS.pencil}`,
+              borderRadius: 3,
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+            }}
           >
-            <X className="w-5 h-5" />
+            <X style={{ width: 16, height: 16 }} />
           </button>
         </div>
 
         {/* Body */}
-        <div className="p-6 space-y-6 overflow-y-auto">
+        <div style={{ padding: 20, display: 'flex', flexDirection: 'column', gap: 20, overflowY: 'auto' }}>
           {/* Format Selection */}
           <div>
-            <label className="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">
-              Export File Format
-            </label>
-            <div className="grid grid-cols-3 gap-3">
+            <label style={sectionLabelStyle}>Export File Format</label>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 10 }}>
               <button
                 type="button"
                 onClick={() => setFormat('png')}
-                className={`p-3 rounded-xl border text-left transition flex flex-col items-center justify-center gap-2 ${
-                  format === 'png'
-                    ? 'border-blue-600 bg-blue-50 dark:bg-blue-950/40 text-blue-600 dark:text-blue-400 ring-2 ring-blue-500/20'
-                    : 'border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-50'
-                }`}
+                style={formatBtnStyle(format === 'png')}
               >
-                <Image className="w-5 h-5" />
-                <span className="text-xs font-bold">High-Res PNG</span>
-                <span className="text-[10px] text-slate-400">Raster Image</span>
+                <Image style={{ width: 18, height: 18 }} />
+                <span style={{ fontSize: 11, fontWeight: 700 }}>High-Res PNG</span>
+                <span style={{ fontSize: 10, color: COLORS.greyInk }}>Raster Image</span>
               </button>
 
               <button
                 type="button"
                 onClick={() => setFormat('svg')}
-                className={`p-3 rounded-xl border text-left transition flex flex-col items-center justify-center gap-2 ${
-                  format === 'svg'
-                    ? 'border-blue-600 bg-blue-50 dark:bg-blue-950/40 text-blue-600 dark:text-blue-400 ring-2 ring-blue-500/20'
-                    : 'border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-50'
-                }`}
+                style={formatBtnStyle(format === 'svg')}
               >
-                <FileCode className="w-5 h-5" />
-                <span className="text-xs font-bold">Vector SVG</span>
-                <span className="text-[10px] text-slate-400">Lossless Vector</span>
+                <FileCode style={{ width: 18, height: 18 }} />
+                <span style={{ fontSize: 11, fontWeight: 700 }}>Vector SVG</span>
+                <span style={{ fontSize: 10, color: COLORS.greyInk }}>Lossless Vector</span>
               </button>
 
               <button
                 type="button"
                 onClick={() => setFormat('json')}
-                className={`p-3 rounded-xl border text-left transition flex flex-col items-center justify-center gap-2 ${
-                  format === 'json'
-                    ? 'border-blue-600 bg-blue-50 dark:bg-blue-950/40 text-blue-600 dark:text-blue-400 ring-2 ring-blue-500/20'
-                    : 'border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-50'
-                }`}
+                style={formatBtnStyle(format === 'json')}
               >
-                <FileText className="w-5 h-5" />
-                <span className="text-xs font-bold">Layout JSON</span>
-                <span className="text-[10px] text-slate-400">Editable Data</span>
+                <FileText style={{ width: 18, height: 18 }} />
+                <span style={{ fontSize: 11, fontWeight: 700 }}>Layout JSON</span>
+                <span style={{ fontSize: 10, color: COLORS.greyInk }}>Editable Data</span>
               </button>
             </div>
           </div>
 
           {/* PNG Resolution Scale */}
           {format === 'png' && (
-            <div className="space-y-2">
-              <label className="block text-xs font-semibold text-slate-400 uppercase tracking-wider">
-                PNG Export Resolution Quality
-              </label>
-              <div className="grid grid-cols-3 gap-2">
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+              <label style={sectionLabelStyle}>PNG Export Resolution Quality</label>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 8 }}>
                 <button
                   type="button"
                   onClick={() => setPngScale(1)}
-                  className={`py-2 px-3 rounded-lg border text-xs font-medium font-mono transition ${
-                    pngScale === 1
-                      ? 'border-blue-600 bg-blue-600 text-white'
-                      : 'border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300'
-                  }`}
+                  style={scaleBtnStyle(pngScale === 1)}
                 >
                   Standard (1080p)
                 </button>
                 <button
                   type="button"
                   onClick={() => setPngScale(2)}
-                  className={`py-2 px-3 rounded-lg border text-xs font-medium font-mono transition ${
-                    pngScale === 2
-                      ? 'border-blue-600 bg-blue-600 text-white'
-                      : 'border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300'
-                  }`}
+                  style={scaleBtnStyle(pngScale === 2)}
                 >
                   High DPI (2K)
                 </button>
                 <button
                   type="button"
                   onClick={() => setPngScale(4)}
-                  className={`py-2 px-3 rounded-lg border text-xs font-medium font-mono transition ${
-                    pngScale === 4
-                      ? 'border-blue-600 bg-blue-600 text-white'
-                      : 'border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300'
-                  }`}
+                  style={scaleBtnStyle(pngScale === 4)}
                 >
                   Ultra HD (4K / Print)
                 </button>
@@ -175,41 +256,27 @@ export const ExportModal: React.FC<ExportModalProps> = ({ isOpen, onClose, proje
 
           {/* Theme Style */}
           {format !== 'json' && (
-            <div className="space-y-2">
-              <label className="block text-xs font-semibold text-slate-400 uppercase tracking-wider">
-                Visual Theme Style
-              </label>
-              <div className="grid grid-cols-3 gap-2">
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+              <label style={sectionLabelStyle}>Visual Theme Style</label>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 8 }}>
                 <button
                   type="button"
                   onClick={() => setTheme('light')}
-                  className={`py-2 px-3 rounded-lg border text-xs font-medium transition ${
-                    theme === 'light'
-                      ? 'border-blue-600 bg-slate-100 dark:bg-slate-800 text-blue-600 font-bold'
-                      : 'border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300'
-                  }`}
+                  style={themeBtnStyle(theme === 'light')}
                 >
                   Architectural Light
                 </button>
                 <button
                   type="button"
                   onClick={() => setTheme('blueprint')}
-                  className={`py-2 px-3 rounded-lg border text-xs font-medium transition ${
-                    theme === 'blueprint'
-                      ? 'border-blue-600 bg-slate-900 text-blue-400 font-bold'
-                      : 'border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300'
-                  }`}
+                  style={themeBtnStyle(theme === 'blueprint')}
                 >
                   Dark Blueprint
                 </button>
                 <button
                   type="button"
                   onClick={() => setTheme('monochrome')}
-                  className={`py-2 px-3 rounded-lg border text-xs font-medium transition ${
-                    theme === 'monochrome'
-                      ? 'border-slate-900 bg-white text-slate-900 font-bold'
-                      : 'border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300'
-                  }`}
+                  style={themeBtnStyle(theme === 'monochrome')}
                 >
                   Monochrome
                 </button>
@@ -219,29 +286,45 @@ export const ExportModal: React.FC<ExportModalProps> = ({ isOpen, onClose, proje
 
           {/* Include Toggles */}
           {format !== 'json' && (
-            <div className="space-y-2 pt-2 border-t border-slate-200 dark:border-slate-800">
-              <label className="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">
-                Export Options & Overlays
-              </label>
-              <div className="space-y-2">
-                <label className="flex items-center gap-2 text-xs text-slate-700 dark:text-slate-300 font-medium cursor-pointer">
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 8, paddingTop: 8, borderTop: `1px solid ${COLORS.divider}` }}>
+              <label style={sectionLabelStyle}>Export Options &amp; Overlays</label>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                <label
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 8,
+                    fontSize: 11,
+                    color: COLORS.mutedInk,
+                    cursor: 'pointer',
+                  }}
+                >
                   <input
                     type="checkbox"
                     checked={includeTitleBlock}
                     onChange={(e) => setIncludeTitleBlock(e.target.checked)}
-                    className="w-4 h-4 text-blue-600 rounded border-slate-300"
+                    style={{ width: 14, height: 14 }}
                   />
-                  <span>Include Event Metadata Title Block & Host Info Banner</span>
+                  <span>Include Event Metadata Title Block &amp; Host Info Banner</span>
                 </label>
 
-                <label className="flex items-center gap-2 text-xs text-slate-700 dark:text-slate-300 font-medium cursor-pointer">
+                <label
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 8,
+                    fontSize: 11,
+                    color: COLORS.mutedInk,
+                    cursor: 'pointer',
+                  }}
+                >
                   <input
                     type="checkbox"
                     checked={includeLegend}
                     onChange={(e) => setIncludeLegend(e.target.checked)}
-                    className="w-4 h-4 text-blue-600 rounded border-slate-300"
+                    style={{ width: 14, height: 14 }}
                   />
-                  <span>Include Scale Bar & Map Legend Overlay</span>
+                  <span>Include Scale Bar &amp; Map Legend Overlay</span>
                 </label>
               </div>
             </div>
@@ -249,11 +332,29 @@ export const ExportModal: React.FC<ExportModalProps> = ({ isOpen, onClose, proje
         </div>
 
         {/* Footer */}
-        <div className="p-4 bg-slate-50 dark:bg-slate-800/50 border-t border-slate-200 dark:border-slate-800 flex justify-end gap-3">
+        <div
+          style={{
+            padding: '12px 20px',
+            backgroundColor: COLORS.headerBg,
+            borderTop: `1px solid ${COLORS.cardBorder}`,
+            display: 'flex',
+            justifyContent: 'flex-end',
+            gap: 10,
+          }}
+        >
           <button
             type="button"
             onClick={onClose}
-            className="px-4 py-2 text-xs font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition"
+            style={{
+              padding: '7px 14px',
+              fontSize: 12,
+              fontWeight: 500,
+              color: COLORS.greyInk,
+              backgroundColor: 'transparent',
+              border: `1px solid ${COLORS.pencil}`,
+              borderRadius: 3,
+              cursor: 'pointer',
+            }}
           >
             Cancel
           </button>
@@ -261,9 +362,22 @@ export const ExportModal: React.FC<ExportModalProps> = ({ isOpen, onClose, proje
             type="button"
             onClick={handleExport}
             disabled={isExporting}
-            className="px-5 py-2 text-xs font-bold text-white bg-blue-600 hover:bg-blue-700 rounded-xl shadow-lg shadow-blue-500/20 transition flex items-center gap-2 disabled:opacity-50"
+            style={{
+              padding: '7px 16px',
+              fontSize: 12,
+              fontWeight: 700,
+              color: '#ffffff',
+              backgroundColor: COLORS.green,
+              border: `1px solid #2d6040`,
+              borderRadius: 3,
+              cursor: isExporting ? 'not-allowed' : 'pointer',
+              opacity: isExporting ? 0.5 : 1,
+              display: 'flex',
+              alignItems: 'center',
+              gap: 6,
+            }}
           >
-            <Download className="w-4 h-4" />
+            <Download style={{ width: 14, height: 14 }} />
             {isExporting ? 'Generating Download...' : `Download ${format.toUpperCase()}`}
           </button>
         </div>

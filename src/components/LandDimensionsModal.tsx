@@ -19,6 +19,56 @@ interface LandDimensionsModalProps {
   }) => void;
 }
 
+const COLORS = {
+  paper: '#faf8f4',
+  pencil: '#c8c0b0',
+  ink: '#2c2825',
+  mutedInk: '#5c5248',
+  greyInk: '#9c9388',
+  blue: '#4a6fa5',
+  green: '#3a7a50',
+  red: '#b94040',
+  headerBg: '#f0ede6',
+  inputBg: '#f0ede6',
+  divider: '#e8e3d8',
+  cardBorder: '#ddd8ce',
+  greenBg: '#eef5f0',
+};
+
+const inputStyle: React.CSSProperties = {
+  width: '100%',
+  padding: '6px 10px',
+  fontSize: 12,
+  backgroundColor: COLORS.inputBg,
+  border: `1px solid ${COLORS.pencil}`,
+  borderRadius: 3,
+  color: COLORS.ink,
+  outline: 'none',
+  fontFamily: 'inherit',
+  boxSizing: 'border-box',
+};
+
+const labelStyle: React.CSSProperties = {
+  display: 'block',
+  fontSize: 11,
+  fontWeight: 500,
+  color: COLORS.mutedInk,
+  marginBottom: 4,
+};
+
+const sectionHeadingStyle: React.CSSProperties = {
+  fontSize: 9,
+  fontWeight: 700,
+  color: COLORS.greyInk,
+  textTransform: 'uppercase',
+  letterSpacing: '0.12em',
+  fontFamily: 'monospace',
+  margin: 0,
+  display: 'flex',
+  alignItems: 'center',
+  gap: 5,
+};
+
 export const LandDimensionsModal: React.FC<LandDimensionsModalProps> = ({
   isOpen,
   onClose,
@@ -65,107 +115,143 @@ export const LandDimensionsModal: React.FC<LandDimensionsModalProps> = ({
   const area = Math.round(width * height);
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4 animate-in fade-in duration-200">
-      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-2xl w-full max-w-xl overflow-hidden flex flex-col">
+    <div
+      style={{
+        position: 'fixed',
+        inset: 0,
+        zIndex: 50,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: 'rgba(0,0,0,0.4)',
+        padding: 16,
+      }}
+      className="animate-in fade-in duration-200"
+    >
+      <div
+        style={{
+          backgroundColor: COLORS.paper,
+          border: `1.5px solid ${COLORS.pencil}`,
+          borderRadius: 4,
+          boxShadow: '2px 4px 16px rgba(44,40,37,0.15)',
+          width: '100%',
+          maxWidth: 576,
+          overflow: 'hidden',
+          display: 'flex',
+          flexDirection: 'column',
+        }}
+      >
         {/* Modal Header */}
-        <div className="px-6 py-4 bg-slate-50 dark:bg-slate-800/50 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="p-2 bg-blue-500/10 text-blue-600 rounded-lg dark:text-blue-400">
-              <Ruler className="w-5 h-5" />
+        <div
+          style={{
+            padding: '14px 20px',
+            backgroundColor: COLORS.headerBg,
+            borderBottom: `1px solid ${COLORS.cardBorder}`,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+          }}
+        >
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+            <div style={{ color: COLORS.blue, display: 'flex' }}>
+              <Ruler style={{ width: 18, height: 18 }} />
             </div>
             <div>
-              <h2 className="text-lg font-bold text-slate-900 dark:text-white">Host's Land & Event Setup</h2>
-              <p className="text-xs text-slate-500 dark:text-slate-400">
+              <h2 style={{ fontSize: 14, fontWeight: 700, color: COLORS.ink, margin: 0 }}>Host's Land &amp; Event Setup</h2>
+              <p style={{ fontSize: 11, color: COLORS.greyInk, margin: '2px 0 0' }}>
                 Define the overall land boundaries, scale unit, and event metadata.
               </p>
             </div>
           </div>
           <button
             onClick={onClose}
-            className="p-1.5 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition"
+            style={{
+              padding: '4px 6px',
+              color: COLORS.greyInk,
+              background: 'transparent',
+              border: `1px solid ${COLORS.pencil}`,
+              borderRadius: 3,
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+            }}
           >
-            <X className="w-5 h-5" />
+            <X style={{ width: 16, height: 16 }} />
           </button>
         </div>
 
         {/* Modal Body Form */}
-        <form onSubmit={handleSubmit} className="p-6 space-y-6 overflow-y-auto max-h-[80vh]">
+        <form onSubmit={handleSubmit} style={{ padding: 20, display: 'flex', flexDirection: 'column', gap: 20, overflowY: 'auto', maxHeight: '80vh' }}>
           {/* Event Metadata Section */}
-          <div className="space-y-4">
-            <h3 className="text-xs font-semibold text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
-              <User className="w-3.5 h-3.5" /> Event & Host Identity
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+            <h3 style={sectionHeadingStyle}>
+              <User style={{ width: 11, height: 11 }} /> Event &amp; Host Identity
             </h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
               <div>
-                <label className="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">
-                  Event Title
-                </label>
+                <label style={labelStyle}>Event Title</label>
                 <input
                   type="text"
                   value={eventTitle}
                   onChange={(e) => setEventTitle(e.target.value)}
                   placeholder="e.g. Summer Craft & Food Expo"
-                  className="w-full px-3 py-2 text-sm bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-slate-900 dark:text-white"
+                  style={inputStyle}
                   required
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">
-                  Host / Organizer Name
-                </label>
+                <label style={labelStyle}>Host / Organizer Name</label>
                 <input
                   type="text"
                   value={host}
                   onChange={(e) => setHost(e.target.value)}
                   placeholder="e.g. City Cultural Board"
-                  className="w-full px-3 py-2 text-sm bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-slate-900 dark:text-white"
+                  style={inputStyle}
                   required
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">
-                  Venue Location
-                </label>
-                <div className="relative">
+                <label style={labelStyle}>Venue Location</label>
+                <div style={{ position: 'relative' }}>
                   <input
                     type="text"
                     value={location}
                     onChange={(e) => setLocation(e.target.value)}
                     placeholder="e.g. Riverside Park Green"
-                    className="w-full pl-8 pr-3 py-2 text-sm bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-slate-900 dark:text-white"
+                    style={{ ...inputStyle, paddingLeft: 28 }}
                   />
-                  <MapPin className="w-4 h-4 text-slate-400 absolute left-2.5 top-2.5" />
+                  <MapPin style={{ width: 13, height: 13, color: COLORS.greyInk, position: 'absolute', left: 8, top: '50%', transform: 'translateY(-50%)' }} />
                 </div>
               </div>
 
               <div>
-                <label className="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">Event Date</label>
-                <div className="relative">
+                <label style={labelStyle}>Event Date</label>
+                <div style={{ position: 'relative' }}>
                   <input
                     type="date"
                     value={date}
                     onChange={(e) => setDate(e.target.value)}
-                    className="w-full pl-8 pr-3 py-2 text-sm bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-slate-900 dark:text-white"
+                    style={{ ...inputStyle, paddingLeft: 28 }}
                   />
-                  <Calendar className="w-4 h-4 text-slate-400 absolute left-2.5 top-2.5" />
+                  <Calendar style={{ width: 13, height: 13, color: COLORS.greyInk, position: 'absolute', left: 8, top: '50%', transform: 'translateY(-50%)' }} />
                 </div>
               </div>
             </div>
           </div>
 
-          <hr className="border-slate-200 dark:border-slate-800" />
+          <hr style={{ border: 'none', borderTop: `1px solid ${COLORS.divider}`, margin: 0 }} />
 
           {/* Land Area Dimensions */}
-          <div className="space-y-4">
-            <h3 className="text-xs font-semibold text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
-              <Ruler className="w-3.5 h-3.5" /> Overall Land Dimensions
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+            <h3 style={sectionHeadingStyle}>
+              <Ruler style={{ width: 11, height: 11 }} /> Overall Land Dimensions
             </h3>
 
-            <div className="grid grid-cols-2 gap-4">
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
               <div>
-                <label className="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">
+                <label style={labelStyle}>
                   Land Width ({unit === 'meters' ? 'm' : 'ft'})
                 </label>
                 <input
@@ -174,13 +260,13 @@ export const LandDimensionsModal: React.FC<LandDimensionsModalProps> = ({
                   max="500"
                   value={width}
                   onChange={(e) => setWidth(Number(e.target.value))}
-                  className="w-full px-3 py-2 text-sm bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-slate-900 dark:text-white font-mono"
+                  style={{ ...inputStyle, fontFamily: 'monospace' }}
                   required
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">
+                <label style={labelStyle}>
                   Land Length / Depth ({unit === 'meters' ? 'm' : 'ft'})
                 </label>
                 <input
@@ -189,30 +275,40 @@ export const LandDimensionsModal: React.FC<LandDimensionsModalProps> = ({
                   max="500"
                   value={height}
                   onChange={(e) => setHeight(Number(e.target.value))}
-                  className="w-full px-3 py-2 text-sm bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-slate-900 dark:text-white font-mono"
+                  style={{ ...inputStyle, fontFamily: 'monospace' }}
                   required
                 />
               </div>
             </div>
 
             {/* Total Area Summary Banner */}
-            <div className="p-3 bg-blue-50 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-900/50 rounded-xl flex items-center justify-between text-xs text-blue-900 dark:text-blue-200">
-              <span className="font-medium">Calculated Total Land Area:</span>
-              <span className="font-bold font-mono text-sm">
+            <div
+              style={{
+                padding: '10px 12px',
+                backgroundColor: COLORS.greenBg,
+                border: `1px solid ${COLORS.green}`,
+                borderRadius: 3,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                fontSize: 11,
+                color: COLORS.green,
+              }}
+            >
+              <span style={{ fontWeight: 500 }}>Calculated Total Land Area:</span>
+              <span style={{ fontWeight: 700, fontFamily: 'monospace', fontSize: 13 }}>
                 {area.toLocaleString()} {unit === 'meters' ? 'm²' : 'ft²'}
               </span>
             </div>
 
             {/* Unit & Shape */}
-            <div className="grid grid-cols-2 gap-4">
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
               <div>
-                <label className="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">
-                  Measurement Unit
-                </label>
+                <label style={labelStyle}>Measurement Unit</label>
                 <select
                   value={unit}
                   onChange={(e) => setUnit(e.target.value as LandUnit)}
-                  className="w-full px-3 py-2 text-sm bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-slate-900 dark:text-white"
+                  style={inputStyle}
                 >
                   <option value="meters">Meters (m)</option>
                   <option value="feet">Feet (ft)</option>
@@ -220,13 +316,11 @@ export const LandDimensionsModal: React.FC<LandDimensionsModalProps> = ({
               </div>
 
               <div>
-                <label className="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">
-                  Land Shape Profile
-                </label>
+                <label style={labelStyle}>Land Shape Profile</label>
                 <select
                   value={shape}
                   onChange={(e) => setShape(e.target.value as LandShape)}
-                  className="w-full px-3 py-2 text-sm bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-slate-900 dark:text-white"
+                  style={inputStyle}
                 >
                   <option value="rectangular">Rectangular Grounds</option>
                   <option value="l_shaped">L-Shaped Grounds</option>
@@ -236,15 +330,13 @@ export const LandDimensionsModal: React.FC<LandDimensionsModalProps> = ({
             </div>
 
             {/* Grid Snapping & Visibility */}
-            <div className="grid grid-cols-2 gap-4 items-center">
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, alignItems: 'center' }}>
               <div>
-                <label className="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">
-                  Grid Snap Distance
-                </label>
+                <label style={labelStyle}>Grid Snap Distance</label>
                 <select
                   value={gridSnap}
                   onChange={(e) => setGridSnap(Number(e.target.value))}
-                  className="w-full px-3 py-2 text-sm bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-slate-900 dark:text-white"
+                  style={inputStyle}
                 >
                   <option value={0.5}>0.5 {unit === 'meters' ? 'm' : 'ft'} (Fine)</option>
                   <option value={1}>1.0 {unit === 'meters' ? 'm' : 'ft'} (Standard)</option>
@@ -253,15 +345,18 @@ export const LandDimensionsModal: React.FC<LandDimensionsModalProps> = ({
                 </select>
               </div>
 
-              <div className="flex items-center gap-2 pt-5">
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8, paddingTop: 18 }}>
                 <input
                   type="checkbox"
                   id="gridVisibleToggle"
                   checked={gridVisible}
                   onChange={(e) => setGridVisible(e.target.checked)}
-                  className="w-4 h-4 text-blue-600 rounded border-slate-300 focus:ring-blue-500"
+                  style={{ width: 14, height: 14 }}
                 />
-                <label htmlFor="gridVisibleToggle" className="text-xs text-slate-700 dark:text-slate-300 font-medium cursor-pointer">
+                <label
+                  htmlFor="gridVisibleToggle"
+                  style={{ fontSize: 11, color: COLORS.mutedInk, fontWeight: 500, cursor: 'pointer' }}
+                >
                   Display Grid Lines on Map
                 </label>
               </div>
@@ -269,19 +364,48 @@ export const LandDimensionsModal: React.FC<LandDimensionsModalProps> = ({
           </div>
 
           {/* Buttons */}
-          <div className="pt-4 border-t border-slate-200 dark:border-slate-800 flex justify-end gap-3">
+          <div
+            style={{
+              paddingTop: 14,
+              borderTop: `1px solid ${COLORS.divider}`,
+              display: 'flex',
+              justifyContent: 'flex-end',
+              gap: 10,
+            }}
+          >
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 text-sm font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition"
+              style={{
+                padding: '7px 14px',
+                fontSize: 12,
+                fontWeight: 500,
+                color: COLORS.greyInk,
+                backgroundColor: 'transparent',
+                border: `1px solid ${COLORS.pencil}`,
+                borderRadius: 3,
+                cursor: 'pointer',
+              }}
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="px-5 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-xl shadow-lg shadow-blue-500/20 transition flex items-center gap-2"
+              style={{
+                padding: '7px 16px',
+                fontSize: 12,
+                fontWeight: 600,
+                color: '#ffffff',
+                backgroundColor: COLORS.green,
+                border: `1px solid #2d6040`,
+                borderRadius: 3,
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                gap: 6,
+              }}
             >
-              <Layers className="w-4 h-4" /> Save Land Configuration
+              <Layers style={{ width: 14, height: 14 }} /> Save Land Configuration
             </button>
           </div>
         </form>

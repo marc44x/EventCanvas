@@ -22,6 +22,25 @@ interface AnalyticsPanelProps {
   onOpenAIAdvisor: () => void;
 }
 
+const COLORS = {
+  paper: '#faf8f4',
+  pencil: '#c8c0b0',
+  ink: '#2c2825',
+  mutedInk: '#5c5248',
+  greyInk: '#9c9388',
+  blue: '#4a6fa5',
+  green: '#3a7a50',
+  red: '#b94040',
+  amber: '#b07030',
+  cardBg: '#f5f2eb',
+  cardBorder: '#ddd8ce',
+  greenBg: '#eef5f0',
+  redBg: '#fdf0f0',
+  blueBg: '#d9e5f5',
+  blueText: '#2c4a7a',
+  track: '#e8e3d8',
+};
+
 export const AnalyticsPanel: React.FC<AnalyticsPanelProps> = ({
   project,
   isOpen,
@@ -48,108 +67,256 @@ export const AnalyticsPanel: React.FC<AnalyticsPanelProps> = ({
   });
 
   return (
-    <div className="fixed inset-y-0 right-0 z-40 w-96 bg-white dark:bg-slate-900 border-l border-slate-200 dark:border-slate-800 shadow-2xl flex flex-col animate-in slide-in-from-right duration-200 text-slate-900 dark:text-slate-100">
+    <div
+      style={{
+        position: 'fixed',
+        inset: '0 0 0 auto',
+        zIndex: 40,
+        width: '24rem',
+        backgroundColor: COLORS.paper,
+        borderLeft: `1.5px solid ${COLORS.pencil}`,
+        display: 'flex',
+        flexDirection: 'column',
+        color: COLORS.ink,
+        fontFamily: 'inherit',
+      }}
+      className="animate-in slide-in-from-right duration-200"
+    >
       {/* Header */}
-      <div className="p-4 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between bg-slate-50 dark:bg-slate-800/50">
-        <div className="flex items-center gap-2">
-          <BarChart3 className="w-5 h-5 text-blue-600 dark:text-blue-400" />
-          <h2 className="text-sm font-bold uppercase tracking-wider">Spatial Metrics & Revenue</h2>
+      <div
+        style={{
+          padding: '12px 16px',
+          borderBottom: `1px solid ${COLORS.cardBorder}`,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          backgroundColor: COLORS.paper,
+        }}
+      >
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+          <BarChart3 style={{ width: 16, height: 16, color: COLORS.blue }} />
+          <h2
+            style={{
+              fontSize: 10,
+              fontWeight: 700,
+              textTransform: 'uppercase',
+              letterSpacing: '0.1em',
+              fontFamily: 'monospace',
+              color: COLORS.ink,
+              margin: 0,
+            }}
+          >
+            Spatial Metrics &amp; Revenue
+          </h2>
         </div>
         <button
           onClick={onClose}
-          className="p-1.5 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800"
+          style={{
+            padding: '4px 6px',
+            color: COLORS.greyInk,
+            background: 'transparent',
+            border: `1px solid ${COLORS.pencil}`,
+            borderRadius: 3,
+            cursor: 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+          }}
         >
-          <X className="w-4 h-4" />
+          <X style={{ width: 14, height: 14 }} />
         </button>
       </div>
 
-      <div className="flex-1 overflow-y-auto p-4 space-y-6 text-xs">
+      <div style={{ flex: 1, overflowY: 'auto', padding: 16, display: 'flex', flexDirection: 'column', gap: 20, fontSize: 11 }}>
         {/* Gemini AI Advisor Callout */}
-        <div className="p-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl shadow-lg flex items-center justify-between">
+        <div
+          style={{
+            padding: 12,
+            border: `1px solid ${COLORS.blue}`,
+            backgroundColor: COLORS.blueBg,
+            borderRadius: 3,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            gap: 8,
+          }}
+        >
           <div>
-            <div className="flex items-center gap-1.5 font-bold text-xs">
-              <Sparkles className="w-4 h-4" /> Gemini Spatial Advisor
+            <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontWeight: 700, fontSize: 11, color: COLORS.blueText }}>
+              <Sparkles style={{ width: 14, height: 14 }} /> Gemini Spatial Advisor
             </div>
-            <p className="text-[11px] opacity-90 mt-0.5">
-              Analyze safety compliance, crowd flow & revenue potential.
+            <p style={{ fontSize: 10, color: COLORS.blueText, opacity: 0.85, marginTop: 2, margin: '2px 0 0' }}>
+              Analyze safety compliance, crowd flow &amp; revenue potential.
             </p>
           </div>
           <button
             onClick={onOpenAIAdvisor}
-            className="px-3 py-1.5 bg-white text-blue-700 font-bold rounded-lg text-xs shadow hover:bg-blue-50 transition"
+            style={{
+              padding: '5px 10px',
+              backgroundColor: COLORS.paper,
+              color: COLORS.blueText,
+              fontWeight: 700,
+              border: `1px solid ${COLORS.blue}`,
+              borderRadius: 3,
+              fontSize: 11,
+              cursor: 'pointer',
+              whiteSpace: 'nowrap',
+            }}
           >
             Analyze
           </button>
         </div>
 
         {/* Spatial Footprint Metrics */}
-        <div className="space-y-3">
-          <h3 className="font-bold text-slate-400 uppercase tracking-wider text-[11px] flex items-center gap-1.5">
-            <Maximize2 className="w-3.5 h-3.5" /> Land Utilization
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+          <h3
+            style={{
+              fontSize: 9,
+              fontWeight: 700,
+              color: COLORS.greyInk,
+              textTransform: 'uppercase',
+              letterSpacing: '0.12em',
+              fontFamily: 'monospace',
+              margin: 0,
+              display: 'flex',
+              alignItems: 'center',
+              gap: 5,
+            }}
+          >
+            <Maximize2 style={{ width: 11, height: 11 }} /> Land Utilization
           </h3>
 
-          <div className="grid grid-cols-2 gap-3">
-            <div className="p-3 bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/80 rounded-xl">
-              <span className="text-[10px] text-slate-500 uppercase">Total Land Area</span>
-              <p className="text-base font-bold font-mono text-slate-900 dark:text-white mt-1">
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
+            <div
+              style={{
+                padding: 10,
+                backgroundColor: COLORS.cardBg,
+                border: `1px solid ${COLORS.cardBorder}`,
+                borderRadius: 3,
+              }}
+            >
+              <span style={{ fontSize: 9, color: COLORS.greyInk, textTransform: 'uppercase', fontFamily: 'monospace' }}>Total Land Area</span>
+              <p style={{ fontSize: 15, fontWeight: 700, fontFamily: 'monospace', color: COLORS.ink, margin: '4px 0 0' }}>
                 {stats.totalLandArea.toLocaleString()} m²
               </p>
             </div>
 
-            <div className="p-3 bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/80 rounded-xl">
-              <span className="text-[10px] text-slate-500 uppercase">Retail Stalls Footprint</span>
-              <p className="text-base font-bold font-mono text-blue-600 dark:text-blue-400 mt-1">
+            <div
+              style={{
+                padding: 10,
+                backgroundColor: COLORS.cardBg,
+                border: `1px solid ${COLORS.cardBorder}`,
+                borderRadius: 3,
+              }}
+            >
+              <span style={{ fontSize: 9, color: COLORS.greyInk, textTransform: 'uppercase', fontFamily: 'monospace' }}>Retail Stalls Footprint</span>
+              <p style={{ fontSize: 15, fontWeight: 700, fontFamily: 'monospace', color: COLORS.blue, margin: '4px 0 0' }}>
                 {stats.allocatedRetailArea.toLocaleString()} m²
               </p>
             </div>
 
-            <div className="p-3 bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/80 rounded-xl">
-              <span className="text-[10px] text-slate-500 uppercase">Roads & Walkways</span>
-              <p className="text-base font-bold font-mono text-slate-700 dark:text-slate-300 mt-1">
+            <div
+              style={{
+                padding: 10,
+                backgroundColor: COLORS.cardBg,
+                border: `1px solid ${COLORS.cardBorder}`,
+                borderRadius: 3,
+              }}
+            >
+              <span style={{ fontSize: 9, color: COLORS.greyInk, textTransform: 'uppercase', fontFamily: 'monospace' }}>Roads &amp; Walkways</span>
+              <p style={{ fontSize: 15, fontWeight: 700, fontFamily: 'monospace', color: COLORS.mutedInk, margin: '4px 0 0' }}>
                 {Math.round(stats.roadArea).toLocaleString()} m²
               </p>
             </div>
 
-            <div className="p-3 bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/80 rounded-xl">
-              <span className="text-[10px] text-slate-500 uppercase">Open Assembly Space</span>
-              <p className="text-base font-bold font-mono text-emerald-600 dark:text-emerald-400 mt-1">
+            <div
+              style={{
+                padding: 10,
+                backgroundColor: COLORS.cardBg,
+                border: `1px solid ${COLORS.cardBorder}`,
+                borderRadius: 3,
+              }}
+            >
+              <span style={{ fontSize: 9, color: COLORS.greyInk, textTransform: 'uppercase', fontFamily: 'monospace' }}>Open Assembly Space</span>
+              <p style={{ fontSize: 15, fontWeight: 700, fontFamily: 'monospace', color: COLORS.green, margin: '4px 0 0' }}>
                 {Math.round(stats.openSpaceArea).toLocaleString()} m²
               </p>
             </div>
           </div>
 
           {/* Utilization Progress bar */}
-          <div className="space-y-1 pt-1">
-            <div className="flex justify-between font-medium">
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 4, paddingTop: 2 }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', fontWeight: 500, color: COLORS.mutedInk }}>
               <span>Ground Density Efficiency:</span>
-              <span className="font-bold font-mono">{stats.utilizationPercentage}%</span>
+              <span style={{ fontWeight: 700, fontFamily: 'monospace', color: COLORS.ink }}>{stats.utilizationPercentage}%</span>
             </div>
-            <div className="w-full bg-slate-200 dark:bg-slate-800 h-2.5 rounded-full overflow-hidden flex">
+            <div
+              style={{
+                width: '100%',
+                backgroundColor: COLORS.track,
+                height: 4,
+                borderRadius: 2,
+                overflow: 'hidden',
+                display: 'flex',
+              }}
+            >
               <div
-                className="bg-blue-600 h-full transition-all duration-300"
-                style={{ width: `${stats.utilizationPercentage}%` }}
+                style={{
+                  backgroundColor: COLORS.blue,
+                  height: '100%',
+                  width: `${stats.utilizationPercentage}%`,
+                  transition: 'width 300ms',
+                }}
               />
               <div
-                className="bg-emerald-500 h-full opacity-60 transition-all duration-300"
-                style={{ width: `${Math.min(100, Math.round((stats.roadArea / stats.totalLandArea) * 100))}%` }}
+                style={{
+                  backgroundColor: COLORS.green,
+                  height: '100%',
+                  opacity: 0.6,
+                  width: `${Math.min(100, Math.round((stats.roadArea / stats.totalLandArea) * 100))}%`,
+                  transition: 'width 300ms',
+                }}
               />
             </div>
           </div>
         </div>
 
         {/* Safety & Spatial Collision Checker */}
-        <div className="space-y-3">
-          <h3 className="font-bold text-slate-400 uppercase tracking-wider text-[11px] flex items-center gap-1.5">
-            <AlertTriangle className="w-3.5 h-3.5" /> Safety & Collision Status
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+          <h3
+            style={{
+              fontSize: 9,
+              fontWeight: 700,
+              color: COLORS.greyInk,
+              textTransform: 'uppercase',
+              letterSpacing: '0.12em',
+              fontFamily: 'monospace',
+              margin: 0,
+              display: 'flex',
+              alignItems: 'center',
+              gap: 5,
+            }}
+          >
+            <AlertTriangle style={{ width: 11, height: 11 }} /> Safety &amp; Collision Status
           </h3>
 
           {stats.hasCollisionWarning ? (
-            <div className="p-3 bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-900 rounded-xl text-red-900 dark:text-red-200 space-y-2">
-              <div className="flex items-center gap-2 font-bold text-xs">
-                <AlertTriangle className="w-4 h-4 text-red-600 shrink-0" />
+            <div
+              style={{
+                padding: 10,
+                backgroundColor: COLORS.redBg,
+                border: `1px solid ${COLORS.red}`,
+                borderRadius: 3,
+                color: COLORS.red,
+                display: 'flex',
+                flexDirection: 'column',
+                gap: 6,
+              }}
+            >
+              <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontWeight: 700, fontSize: 11 }}>
+                <AlertTriangle style={{ width: 14, height: 14, flexShrink: 0 }} />
                 <span>Overlapping Stalls Detected ({stats.collisionsList.length})</span>
               </div>
-              <ul className="list-disc list-inside text-[11px] space-y-0.5 opacity-90">
+              <ul style={{ listStyle: 'disc', paddingLeft: 16, fontSize: 10, margin: 0, display: 'flex', flexDirection: 'column', gap: 2, opacity: 0.9 }}>
                 {stats.collisionsList.slice(0, 3).map((col, idx) => (
                   <li key={idx}>
                     "{col.name1}" overlaps with "{col.name2}"
@@ -158,53 +325,107 @@ export const AnalyticsPanel: React.FC<AnalyticsPanelProps> = ({
               </ul>
             </div>
           ) : (
-            <div className="p-3 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-900 rounded-xl text-emerald-900 dark:text-emerald-200 flex items-center gap-2 font-medium">
-              <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+            <div
+              style={{
+                padding: 10,
+                backgroundColor: COLORS.greenBg,
+                border: `1px solid ${COLORS.green}`,
+                borderRadius: 3,
+                color: COLORS.green,
+                display: 'flex',
+                alignItems: 'center',
+                gap: 8,
+                fontWeight: 500,
+              }}
+            >
+              <CheckCircle2 style={{ width: 14, height: 14, flexShrink: 0 }} />
               <span>Zero spatial collisions detected! Clearance is optimal.</span>
             </div>
           )}
         </div>
 
         {/* Financial Revenue Potential */}
-        <div className="space-y-3">
-          <h3 className="font-bold text-slate-400 uppercase tracking-wider text-[11px] flex items-center gap-1.5">
-            <DollarSign className="w-3.5 h-3.5" /> Host Rental Revenue Estimate
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+          <h3
+            style={{
+              fontSize: 9,
+              fontWeight: 700,
+              color: COLORS.greyInk,
+              textTransform: 'uppercase',
+              letterSpacing: '0.12em',
+              fontFamily: 'monospace',
+              margin: 0,
+              display: 'flex',
+              alignItems: 'center',
+              gap: 5,
+            }}
+          >
+            <DollarSign style={{ width: 11, height: 11 }} /> Host Rental Revenue Estimate
           </h3>
 
-          <div className="p-4 bg-emerald-50/50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-900 rounded-xl space-y-1">
-            <span className="text-[10px] text-emerald-700 dark:text-emerald-400 font-medium uppercase">
+          <div
+            style={{
+              padding: 14,
+              backgroundColor: COLORS.greenBg,
+              border: `1px solid ${COLORS.green}`,
+              borderRadius: 3,
+              display: 'flex',
+              flexDirection: 'column',
+              gap: 4,
+            }}
+          >
+            <span style={{ fontSize: 9, color: COLORS.green, fontWeight: 500, textTransform: 'uppercase', fontFamily: 'monospace' }}>
               Total Estimated Daily Rental Income
             </span>
-            <div className="text-2xl font-extrabold text-emerald-600 dark:text-emerald-400 font-mono">
+            <div style={{ fontSize: 22, fontWeight: 800, color: COLORS.green, fontFamily: 'monospace' }}>
               ${stats.totalEstimatedRevenue.toLocaleString()} / day
             </div>
-            <p className="text-[10px] text-slate-500">
-              Calculated from {stats.totalEstablishmentsCount} active retail & food stall fees.
+            <p style={{ fontSize: 9, color: COLORS.mutedInk, margin: 0 }}>
+              Calculated from {stats.totalEstablishmentsCount} active retail &amp; food stall fees.
             </p>
           </div>
         </div>
 
         {/* Category Breakdown Table */}
-        <div className="space-y-3">
-          <h3 className="font-bold text-slate-400 uppercase tracking-wider text-[11px] flex items-center gap-1.5">
-            <Store className="w-3.5 h-3.5" /> Retail Category Breakdown
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+          <h3
+            style={{
+              fontSize: 9,
+              fontWeight: 700,
+              color: COLORS.greyInk,
+              textTransform: 'uppercase',
+              letterSpacing: '0.12em',
+              fontFamily: 'monospace',
+              margin: 0,
+              display: 'flex',
+              alignItems: 'center',
+              gap: 5,
+            }}
+          >
+            <Store style={{ width: 11, height: 11 }} /> Retail Category Breakdown
           </h3>
 
-          <div className="space-y-2">
+          <div style={{ display: 'flex', flexDirection: 'column' }}>
             {Object.entries(categoryCounts).map(([cat, info]) => (
               <div
                 key={cat}
-                className="p-2.5 bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/80 rounded-lg flex items-center justify-between"
+                style={{
+                  padding: '8px 4px',
+                  borderBottom: `1px dashed ${COLORS.cardBorder}`,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                }}
               >
                 <div>
-                  <span className="font-bold text-slate-900 dark:text-white capitalize">
+                  <span style={{ fontWeight: 700, color: COLORS.ink, textTransform: 'capitalize' }}>
                     {cat.replace('_', ' & ')}
                   </span>
-                  <div className="text-[10px] text-slate-500">
+                  <div style={{ fontSize: 10, color: COLORS.greyInk }}>
                     {info.count} stalls | {info.area} m² total
                   </div>
                 </div>
-                <span className="font-mono font-bold text-emerald-600 dark:text-emerald-400">
+                <span style={{ fontFamily: 'monospace', fontWeight: 700, color: COLORS.green }}>
                   ${info.revenue}
                 </span>
               </div>

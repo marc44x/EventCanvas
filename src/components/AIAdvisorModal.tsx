@@ -8,6 +8,13 @@ interface AIAdvisorModalProps {
   project: EventLayoutProject;
 }
 
+const card: React.CSSProperties = {
+  backgroundColor: '#f5f2eb',
+  border: '1px solid #ddd8ce',
+  borderRadius: 3,
+  padding: '10px 12px',
+};
+
 export const AIAdvisorModal: React.FC<AIAdvisorModalProps> = ({ isOpen, onClose, project }) => {
   const [loading, setLoading] = useState(false);
   const [analysisResult, setAnalysisResult] = useState<AIAnalysisResult | null>(null);
@@ -29,7 +36,6 @@ export const AIAdvisorModal: React.FC<AIAdvisorModalProps> = ({ isOpen, onClose,
           waypoints: project.waypoints,
         }),
       });
-
       const json = await response.json();
       if (json.success && json.data) {
         setAnalysisResult(json.data);
@@ -45,173 +51,209 @@ export const AIAdvisorModal: React.FC<AIAdvisorModalProps> = ({ isOpen, onClose,
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4 animate-in fade-in duration-200">
-      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-2xl w-full max-w-2xl overflow-hidden flex flex-col max-h-[90vh]">
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center p-4"
+      style={{ backgroundColor: 'rgba(44,40,37,0.45)' }}
+    >
+      <div
+        className="w-full max-w-2xl flex flex-col overflow-hidden"
+        style={{
+          backgroundColor: '#faf8f4',
+          border: '1.5px solid #c8c0b0',
+          borderRadius: 4,
+          boxShadow: '2px 6px 24px rgba(44,40,37,0.18)',
+          maxHeight: '90vh',
+        }}
+      >
         {/* Header */}
-        <div className="px-6 py-4 bg-gradient-to-r from-blue-600 to-indigo-600 text-white flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="p-2 bg-white/10 rounded-lg backdrop-blur-md">
-              <Sparkles className="w-5 h-5 text-amber-300" />
-            </div>
+        <div
+          className="flex items-center justify-between px-5 py-3 shrink-0"
+          style={{ backgroundColor: '#f0ede6', borderBottom: '1px solid #ddd8ce' }}
+        >
+          <div className="flex items-center gap-2">
+            <Sparkles style={{ width: 16, height: 16, color: '#4a6fa5' }} />
             <div>
-              <h2 className="text-base font-bold">Gemini Event Master Plan Advisor</h2>
-              <p className="text-xs text-blue-100">
-                AI Spatial optimization, safety compliance & crowd flow analysis
+              <p style={{ fontSize: 12, fontWeight: 700, color: '#2c2825' }}>AI Layout Advisor</p>
+              <p style={{ fontSize: 10, color: '#9c9388', fontFamily: 'monospace' }}>
+                Spatial optimisation · safety · crowd flow
               </p>
             </div>
           </div>
           <button
             onClick={onClose}
-            className="p-1.5 text-white/80 hover:text-white rounded-lg hover:bg-white/10 transition"
+            style={{ border: 'none', background: 'transparent', cursor: 'pointer', color: '#9c9388', padding: 4 }}
           >
-            <X className="w-5 h-5" />
+            <X style={{ width: 16, height: 16 }} />
           </button>
         </div>
 
-        {/* Content Body */}
-        <div className="p-6 overflow-y-auto space-y-6 text-slate-900 dark:text-slate-100 text-xs">
+        {/* Body */}
+        <div className="flex-1 overflow-y-auto p-5" style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+
+          {/* Ready state */}
           {!analysisResult && !loading && (
-            <div className="py-8 text-center space-y-4">
-              <div className="w-16 h-16 bg-blue-50 dark:bg-blue-950/50 text-blue-600 dark:text-blue-400 rounded-full flex items-center justify-center mx-auto shadow-inner">
-                <Sparkles className="w-8 h-8" />
+            <div style={{ textAlign: 'center', padding: '32px 0', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 12 }}>
+              <div style={{
+                width: 52, height: 52, border: '1.5px solid #c8c0b0', borderRadius: '50%',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                backgroundColor: '#f0ede6',
+              }}>
+                <Sparkles style={{ width: 22, height: 22, color: '#4a6fa5' }} />
               </div>
-              <div className="space-y-1 max-w-md mx-auto">
-                <h3 className="text-sm font-bold">Ready to analyze event land layout</h3>
-                <p className="text-slate-500">
-                  Gemini AI will evaluate your {project.landDimensions.width}m x {project.landDimensions.height}m grounds, {project.establishments.length} placed establishments, road network, and safety exit routes.
+              <div>
+                <p style={{ fontSize: 13, fontWeight: 700, color: '#2c2825', marginBottom: 4 }}>
+                  Ready to analyse your layout
+                </p>
+                <p style={{ fontSize: 11, color: '#9c9388', maxWidth: 360 }}>
+                  Gemini will evaluate your {project.landDimensions.width}m × {project.landDimensions.height}m grounds,{' '}
+                  {project.establishments.length} establishments, road network, and safety exits.
                 </p>
               </div>
               <button
                 onClick={handleRunAnalysis}
-                className="px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl shadow-lg shadow-blue-500/20 transition inline-flex items-center gap-2 text-xs"
+                style={{
+                  display: 'flex', alignItems: 'center', gap: 6,
+                  padding: '7px 18px', fontSize: 12, fontWeight: 700,
+                  border: '1px solid #4a6fa5', borderRadius: 3,
+                  backgroundColor: '#d9e5f5', color: '#2c4a7a', cursor: 'pointer',
+                }}
               >
-                <Sparkles className="w-4 h-4" /> Run AI Layout Evaluation
+                <Sparkles style={{ width: 13, height: 13 }} />
+                Run AI Evaluation
               </button>
             </div>
           )}
 
+          {/* Loading */}
           {loading && (
-            <div className="py-12 text-center space-y-3">
-              <RefreshCw className="w-8 h-8 text-blue-600 animate-spin mx-auto" />
-              <p className="font-bold text-sm">Evaluating spatial footprint & crowd safety...</p>
-              <p className="text-slate-400">Inspecting clearance, road widths, and commercial distribution</p>
+            <div style={{ textAlign: 'center', padding: '40px 0', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 10 }}>
+              <RefreshCw style={{ width: 24, height: 24, color: '#4a6fa5', animation: 'spin 1s linear infinite' }} />
+              <p style={{ fontSize: 12, fontWeight: 600, color: '#2c2825' }}>Evaluating spatial footprint & crowd safety…</p>
+              <p style={{ fontSize: 10, color: '#9c9388', fontStyle: 'italic' }}>Inspecting clearance, road widths, commercial distribution</p>
             </div>
           )}
 
+          {/* Error */}
           {error && (
-            <div className="p-4 bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-900 rounded-xl text-red-900 dark:text-red-200 flex items-center gap-3">
-              <AlertCircle className="w-5 h-5 shrink-0" />
+            <div style={{ ...card, border: '1px solid #b94040', backgroundColor: '#fdf0f0', display: 'flex', alignItems: 'flex-start', gap: 8 }}>
+              <AlertCircle style={{ width: 14, height: 14, color: '#b94040', flexShrink: 0, marginTop: 1 }} />
               <div>
-                <p className="font-bold">Analysis Error</p>
-                <p>{error}</p>
+                <p style={{ fontSize: 11, fontWeight: 700, color: '#b94040', marginBottom: 2 }}>Analysis Error</p>
+                <p style={{ fontSize: 11, color: '#b94040' }}>{error}</p>
               </div>
             </div>
           )}
 
+          {/* Results */}
           {analysisResult && (
-            <div className="space-y-6">
-              {/* Score Cards */}
-              <div className="grid grid-cols-2 gap-4">
-                <div className="p-4 bg-blue-50 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-900 rounded-xl space-y-2">
-                  <div className="flex items-center justify-between text-blue-900 dark:text-blue-200 font-bold">
-                    <span className="flex items-center gap-1.5">
-                      <Layers className="w-4 h-4" /> Spatial Efficiency
+            <>
+              {/* Score cards */}
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
+                {/* Spatial Efficiency */}
+                <div style={card}>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 6 }}>
+                    <span style={{ display: 'flex', alignItems: 'center', gap: 5, fontSize: 10, fontWeight: 700, color: '#4a6fa5', textTransform: 'uppercase' }}>
+                      <Layers style={{ width: 11, height: 11 }} /> Spatial
                     </span>
-                    <span className="text-xl font-mono">{analysisResult.spatialEfficiencyScore}/100</span>
+                    <span style={{ fontSize: 16, fontWeight: 700, fontFamily: 'monospace', color: '#2c2825' }}>
+                      {analysisResult.spatialEfficiencyScore}<span style={{ fontSize: 10, color: '#9c9388' }}>/100</span>
+                    </span>
                   </div>
-                  <div className="w-full bg-blue-200 dark:bg-blue-900 h-2 rounded-full overflow-hidden">
-                    <div
-                      className="bg-blue-600 h-full rounded-full"
-                      style={{ width: `${analysisResult.spatialEfficiencyScore}%` }}
-                    />
+                  <div style={{ height: 4, backgroundColor: '#e8e3d8', borderRadius: 2, overflow: 'hidden' }}>
+                    <div style={{ height: '100%', width: `${analysisResult.spatialEfficiencyScore}%`, backgroundColor: '#4a6fa5', borderRadius: 2 }} />
                   </div>
                 </div>
 
-                <div className="p-4 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-900 rounded-xl space-y-2">
-                  <div className="flex items-center justify-between text-emerald-900 dark:text-emerald-200 font-bold">
-                    <span className="flex items-center gap-1.5">
-                      <ShieldCheck className="w-4 h-4" /> Crowd Safety & Clearance
+                {/* Crowd Safety */}
+                <div style={card}>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 6 }}>
+                    <span style={{ display: 'flex', alignItems: 'center', gap: 5, fontSize: 10, fontWeight: 700, color: '#3a7a50', textTransform: 'uppercase' }}>
+                      <ShieldCheck style={{ width: 11, height: 11 }} /> Safety
                     </span>
-                    <span className="text-xl font-mono">{analysisResult.crowdSafetyScore}/100</span>
+                    <span style={{ fontSize: 16, fontWeight: 700, fontFamily: 'monospace', color: '#2c2825' }}>
+                      {analysisResult.crowdSafetyScore}<span style={{ fontSize: 10, color: '#9c9388' }}>/100</span>
+                    </span>
                   </div>
-                  <div className="w-full bg-emerald-200 dark:bg-emerald-900 h-2 rounded-full overflow-hidden">
-                    <div
-                      className="bg-emerald-600 h-full rounded-full"
-                      style={{ width: `${analysisResult.crowdSafetyScore}%` }}
-                    />
+                  <div style={{ height: 4, backgroundColor: '#e8e3d8', borderRadius: 2, overflow: 'hidden' }}>
+                    <div style={{ height: '100%', width: `${analysisResult.crowdSafetyScore}%`, backgroundColor: '#3a7a50', borderRadius: 2 }} />
                   </div>
                 </div>
               </div>
 
-              {/* Commercial Potential */}
-              <div className="p-4 bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/80 rounded-xl space-y-1">
-                <h4 className="font-bold text-slate-900 dark:text-white flex items-center gap-1.5 uppercase tracking-wider text-[11px]">
-                  <TrendingUp className="w-4 h-4 text-emerald-500" /> Commercial & Revenue Analysis
-                </h4>
-                <p className="text-slate-600 dark:text-slate-300 leading-relaxed">
-                  {analysisResult.commercialPotential}
+              {/* Commercial potential */}
+              <div style={card}>
+                <p style={{ fontSize: 9, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.06em', color: '#9c9388', marginBottom: 6, display: 'flex', alignItems: 'center', gap: 4 }}>
+                  <TrendingUp style={{ width: 10, height: 10 }} /> Commercial & Revenue
                 </p>
+                <p style={{ fontSize: 11, color: '#5c5248', lineHeight: 1.6 }}>{analysisResult.commercialPotential}</p>
               </div>
 
-              {/* Master Planning Recommendations */}
-              <div className="space-y-2">
-                <h4 className="font-bold text-slate-900 dark:text-white uppercase tracking-wider text-[11px]">
-                  Actionable Master Planning Recommendations
-                </h4>
-                <div className="space-y-1.5">
+              {/* Recommendations */}
+              <div>
+                <p style={{ fontSize: 9, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.06em', color: '#9c9388', marginBottom: 6 }}>
+                  Recommendations
+                </p>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 5 }}>
                   {analysisResult.recommendations?.map((rec, idx) => (
-                    <div
-                      key={idx}
-                      className="p-2.5 bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/80 rounded-lg flex items-start gap-2 text-slate-700 dark:text-slate-300"
-                    >
-                      <CheckCircle2 className="w-4 h-4 text-blue-500 shrink-0 mt-0.5" />
-                      <span>{rec}</span>
+                    <div key={idx} style={{ ...card, display: 'flex', alignItems: 'flex-start', gap: 8 }}>
+                      <CheckCircle2 style={{ width: 12, height: 12, color: '#4a6fa5', flexShrink: 0, marginTop: 1 }} />
+                      <span style={{ fontSize: 11, color: '#5c5248', lineHeight: 1.5 }}>{rec}</span>
                     </div>
                   ))}
                 </div>
               </div>
 
-              {/* Suggested Additions */}
+              {/* Suggested additions */}
               {analysisResult.suggestedAdditions?.length > 0 && (
-                <div className="space-y-2">
-                  <h4 className="font-bold text-slate-900 dark:text-white uppercase tracking-wider text-[11px]">
-                    Suggested Missing Amenities or Stalls
-                  </h4>
-                  <div className="flex flex-wrap gap-2">
+                <div>
+                  <p style={{ fontSize: 9, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.06em', color: '#9c9388', marginBottom: 6 }}>
+                    Suggested Additions
+                  </p>
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
                     {analysisResult.suggestedAdditions.map((item, idx) => (
-                      <span
-                        key={idx}
-                        className="px-2.5 py-1 bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-900 text-amber-800 dark:text-amber-300 rounded-lg font-medium"
-                      >
+                      <span key={idx} style={{
+                        fontSize: 10, padding: '3px 8px',
+                        border: '1px solid #b07030', borderRadius: 2,
+                        backgroundColor: '#fdf6ee', color: '#b07030',
+                      }}>
                         + {item}
                       </span>
                     ))}
                   </div>
                 </div>
               )}
-            </div>
+            </>
           )}
         </div>
 
         {/* Footer */}
-        <div className="p-4 bg-slate-50 dark:bg-slate-800/50 border-t border-slate-200 dark:border-slate-800 flex justify-between items-center">
-          {analysisResult && (
+        <div
+          className="flex items-center justify-between px-5 py-3 shrink-0"
+          style={{ backgroundColor: '#f0ede6', borderTop: '1px solid #ddd8ce' }}
+        >
+          {analysisResult ? (
             <button
               onClick={handleRunAnalysis}
               disabled={loading}
-              className="text-xs text-blue-600 font-bold hover:underline flex items-center gap-1"
+              style={{ display: 'flex', alignItems: 'center', gap: 5, fontSize: 10, color: '#4a6fa5', background: 'none', border: 'none', cursor: 'pointer', fontWeight: 600 }}
             >
-              <RefreshCw className="w-3.5 h-3.5" /> Re-evaluate Layout
+              <RefreshCw style={{ width: 11, height: 11 }} /> Re-evaluate
             </button>
-          )}
+          ) : <div />}
           <button
             onClick={onClose}
-            className="ml-auto px-4 py-2 bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-900 text-xs font-bold rounded-xl"
+            style={{
+              fontSize: 11, fontWeight: 600, padding: '5px 14px',
+              border: '1px solid #c8c0b0', borderRadius: 3,
+              backgroundColor: 'transparent', color: '#5c5248', cursor: 'pointer',
+            }}
           >
             Close
           </button>
         </div>
       </div>
+
+      <style>{`@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }`}</style>
     </div>
   );
 };
